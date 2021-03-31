@@ -1,0 +1,36 @@
+{
+  "name": "radiorexfordbot",
+  "version": "0.0.1",
+  "description": "An exclusive simple bot, related to the Radio Rexford Podcast.",
+  "main": "dist/src/bot.js",
+  "dependencies": {
+    "discord-akairo": "*",
+    "discord.js": "*",
+    "moment": "*",
+    "ms": "*",
+    "rss-parser": "*",
+    "common-tags": "*"
+  },
+  "devDependencies": {
+    "@mrboolean/envconfig": "*",
+    "@types/dotenv": "*",
+    "@types/ms": "*",
+    "@types/node": "*",
+    "@types/common-tags": "*",
+    "dotenv": "*",
+    "eslint": "*",
+    "prettier": "*",
+    "reflect-metadata": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  },
+  "scripts": {
+    "test": "tsc && node dist/src/bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datflowts/RadioRexfordBot"
+  },
+  "author": "DatFlow#0001",
+  "license": "AGPL-3.0-or-later"
+}
