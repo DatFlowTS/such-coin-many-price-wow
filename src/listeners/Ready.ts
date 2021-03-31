@@ -23,7 +23,7 @@ export default class ReadyListener extends Listener {
         const client = this.client;
         defaultPresence(client);
         setInterval(checkForRecordTimestamp, 30000, client);
-        setInterval(recordingReminder, 60000, client);
+        setInterval(recordingReminder, 600000, client);
 
         console.log(stripIndents`
 		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
@@ -114,7 +114,7 @@ function recordingReminder (client: AkairoClient) {
 
     var passedTime: number = now - timestamp;
 
-    var reminder: string;
+    var reminder: string = '';
 
     switch (timePassed(passedTime)) {
         case 1:
@@ -132,5 +132,8 @@ function recordingReminder (client: AkairoClient) {
         default:
             break;
     }
-    return channel.send('@everyone, ' + reminder);
+    if (reminder !== '') {
+        return channel.send('@everyone, ' + reminder);
+    }
+    return;
 }
