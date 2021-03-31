@@ -4,13 +4,15 @@
   "description": "An exclusive simple bot, related to the Radio Rexford Podcast.",
   "main": "dist/src/bot.js",
   "dependencies": {
+    "common-tags": "*",
     "discord-akairo": "*",
     "discord.js": "*",
     "moment": "*",
     "ms": "*",
+    "node-emoji": "*",
+    "punycode.js": "*",
     "rss-parser": "*",
-    "common-tags": "*",
-    "node-emoji": "*"
+    "validator": "*"
   },
   "devDependencies": {
     "@mrboolean/envconfig": "*",
@@ -18,6 +20,8 @@
     "@types/ms": "*",
     "@types/node": "*",
     "@types/common-tags": "*",
+    "@types/validator": "*",
+    "@types/moment": "*",
     "dotenv": "*",
     "eslint": "*",
     "prettier": "*",

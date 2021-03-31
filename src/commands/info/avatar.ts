@@ -9,7 +9,7 @@ export default class AvatarCommand extends Command {
             channel: 'guild',
             ratelimit: 3,
             description: {
-                content: 'Display the avatar of a member',
+                content: 'Zeigt das Profilbild eines Nutzers (oder das Eigene)',
                 usage: 'avatar <member>',
                 examples: [
                     ' ',

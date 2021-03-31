@@ -3,7 +3,7 @@ import { Message, MessageEmbed, GuildEmoji, TextChannel, NewsChannel } from 'dis
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
 import * as emojis from 'node-emoji';
-import punycode from 'punycode';
+import * as punycode from 'punycode.js';
 
 const emojiRegex = /<(?:a)?:(?:\w{2,32}):(\d{17,19})>?/;
 
@@ -12,7 +12,7 @@ export default class EmojiInfoCommand extends Command {
         super('emoji', {
             aliases: ['emoji', 'emoji-info'],
             description: {
-                content: 'Gets info about a global emoji.',
+                content: 'Zeigt Infos über ein Emoji.',
                 usage: '<emoji>',
                 examples: ['🤔', 'thinking', '721497150302847017', '<:think:588127063257645077>']
             },
@@ -30,8 +30,8 @@ export default class EmojiInfoCommand extends Command {
                         return message.guild!.emojis.cache.find((e: GuildEmoji): boolean => e.name === content) || emojis.find(content);
                     },
                     prompt: {
-                        start: (message: Message): string => `${message.author}, what emoji do you want information about`,
-                        retry: (message: Message): string => `${message.author}, please provide a valid emoji.`,
+                        start: (message: Message): string => `${message.author}, über welches Emoji möchtest du Infos?`,
+                        retry: (message: Message): string => `${message.author}, gebe bitte ein gültiges Emoji an.`,
                         retries: 2
                     }
                 }
@@ -41,19 +41,47 @@ export default class EmojiInfoCommand extends Command {
 
     public async exec(message: Message, { emoji }: { emoji: any }): Promise<Message | Message[]> {
 
-        let emojidate: moment.Moment = moment.utc(emoji.createdAt);
-        let dateDay: string = emojidate.format('DD');
+        let emojiDate: moment.Moment = moment.utc(emoji.createdAt);
+        let emojiMonth: string = emojiDate.format('MMMM');
+        let emojiMonthString: string;
+
+        switch (emojiMonth.toLowerCase()) {
+            case 'january':
+                emojiMonthString = 'Januar'
+            case 'february':
+                emojiMonthString = 'Februar'
+            case 'march':
+                emojiMonthString = 'März'
+            case 'april':
+                emojiMonthString = 'April'
+            case 'may':
+                emojiMonthString = 'Mai'
+            case 'june':
+                emojiMonthString = 'Juni'
+            case 'july':
+                emojiMonthString = 'Juli'
+            case 'august':
+                emojiMonthString = 'August'
+            case 'september':
+                emojiMonthString = 'September'
+            case 'october':
+                emojiMonthString = 'Oktober'
+            case 'november':
+                emojiMonthString = 'November'
+            default:
+                emojiMonthString = 'Dezember'
+        }
 
         const embed = new MessageEmbed()
             .setColor(Math.floor(Math.random() * 12777214) + 1);
 
         if (emoji instanceof GuildEmoji) {
-            embed.setDescription(`Info about **${emoji.name}** (ID: ${emoji.id})`);
+            embed.setDescription(`Info über **${emoji.name}** (ID: ${emoji.id})`);
             embed.addField(
                 '⇒ Info',
                 stripIndents`
 				• Identifier: \`<${emoji.identifier}>\`
-				• Creation Date: ${emojidate.format(`${parseInt(dateDay) === 1 ? `${dateDay}[st]` : `${parseInt(dateDay) === 2 ? `${dateDay}[nd]` : `${parseInt(dateDay) === 3 ? `${dateDay}[rd]` : `${parseInt(dateDay) === 21 ? `${dateDay}[st]` : `${parseInt(dateDay) === 22 ? `${dateDay}[nd]` : `${parseInt(dateDay) === 23 ? `${dateDay}[rd]` : `${parseInt(dateDay) === 31 ? `${dateDay}[st]` : `${dateDay}[th]`}`}`}`}`}`}`} MMMM YYYY [|] HH:mm:ss [UTC]`)}
+				• Erstellt: ${emojiDate.format(`DD. [${emojiMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
                 • URL: ${emoji.url}
             `);
             embed.setImage(emoji.url);
