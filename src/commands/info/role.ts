@@ -44,7 +44,7 @@ export default class RoleInfoCommand extends Command {
         super('role', {
             aliases: ['role', 'roleinfo', 'role-info'],
             description: {
-                content: 'Gets info about a role.',
+                content: 'Zeigt Infos über eine Rolle.',
                 usage: '[role]',
                 examples: ['Admin', '@Admin']
             },
