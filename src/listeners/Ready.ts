@@ -18,23 +18,8 @@ export default class ReadyListener extends Listener {
 
 	public exec(): void {
         const client: AkairoClient = this.client;
-
-        defaultPresence(client);
-
-
-
+        setInterval(checkForRecordTimestamp, 30000, [client, botConfig.botDirectory]);
     }
-}
-
-
-
-function defaultPresence (client: AkairoClient) {
-    client.user.setPresence({
-        activity: {
-            type: 'LISTENING',
-            name: 'Radio Rexford'
-        }
-    })
 }
 
 async function checkForRecordTimestamp (client: AkairoClient, path: String) {
@@ -48,6 +33,7 @@ async function checkForRecordTimestamp (client: AkairoClient, path: String) {
 
     if (check["timestamp"] == 0) {
         // do simply nothing
+        if (client.user.presence.status !== 'online') return defaultPresence(client);
         return
     } else {
         var timestamp: number = check["timestamp"];
@@ -57,6 +43,8 @@ async function checkForRecordTimestamp (client: AkairoClient, path: String) {
         let now: number = Date.now();
 
         var passedTime: number = now - timestamp;
+
+        recordingPresence(client, passedTime);
 
         switch (timePassed(passedTime)) {
             case 1:
@@ -71,6 +59,28 @@ async function checkForRecordTimestamp (client: AkairoClient, path: String) {
                 return;
         }
     }
+}
+
+function defaultPresence (client: AkairoClient) {
+    client.user.setPresence({
+        activity: {
+            type: 'LISTENING',
+            name: 'Radio Rexford'
+        },
+        status: 'online',
+        afk: false
+    })
+}
+
+function recordingPresence (client: AkairoClient, passedTime: number) {
+    client.user.setPresence({
+        activity: {
+            type: 'CUSTOM_STATUS',
+            name: `Recording: ${ms(ms(passedTime))}`
+        },
+        status: 'dnd',
+        afk: true
+    })
 }
 
 function timePassed (passedTime: number): number {
