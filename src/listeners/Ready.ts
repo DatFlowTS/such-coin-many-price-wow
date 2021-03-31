@@ -7,7 +7,7 @@ import BotClient from '../client/BotClient';
 import botConfig from '../config/botConfig';
 import fs from 'fs';
 
-const path: string = "/home/datflow/RadioRexfordBot";
+const path: string = "/home/datflow/RadioRexfordBot/";
 
 export default class ReadyListener extends Listener {
 	public constructor() {
@@ -19,9 +19,9 @@ export default class ReadyListener extends Listener {
 	}
 
 	public exec(): void {
-        const client: AkairoClient = this.client;
+        const client = this.client;
         defaultPresence(client);
-        setInterval(checkForRecordTimestamp, 30000, [client]);
+        setInterval(checkForRecordTimestamp, 30000, client);
 
         console.log(stripIndents`
 		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
@@ -48,20 +48,19 @@ export default class ReadyListener extends Listener {
 }
 
 async function checkForRecordTimestamp (client: AkairoClient) {
-    let checkString = fs.readFile(`${path}goTimestamp.json`, function (err, data) {
-        if(err) return console.log(err.stack)
-        return data
-    });
+    let checkString = fs.readFileSync(`${path}goTimestamp.json`, { encoding: 'utf-8' });
 
-    let check: String = JSON.parse(JSON.stringify(checkString));
+    console.log(checkString);
 
-    if (check["timestamp"] == 0) {
+    let check = JSON.parse(JSON.stringify(checkString));
+
+    if (check.timestamp == 0) {
         // do simply nothing
         if (client.user.presence.status !== 'online') return defaultPresence(client);
         return
     } else {
-        var timestamp: number = check["timestamp"];
-        var channelID: string = check["channelID"];
+        var timestamp: number = check.timestamp;
+        var channelID: string = check.channelID;
 
         let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
         let now: number = Date.now();
@@ -72,13 +71,13 @@ async function checkForRecordTimestamp (client: AkairoClient) {
 
         switch (timePassed(passedTime)) {
             case 1:
-                return channel.send(`**${ms(ms(passedTime, { long: true }))}**`)
+                return channel.send(`**${moment.duration(passedTime).humanize(true)}**`)
             case 2:
-                return channel.send(`*Es wird langsam eng...*\n**${ms(ms(passedTime, { long: true }))}**`)
+                return channel.send(`*Es wird langsam eng...*\n**${moment.duration(passedTime).humanize(true)}**`)
             case 3:
-                return channel.send(`*Jetzt ist es lang genug!*\n**${ms(ms(passedTime, { long: true }))}**`)
+                return channel.send(`*Jetzt ist es lang genug!*\n**${moment.duration(passedTime).humanize(true)}**`)
             case 4:
-                return channel.send(`*Heute wieder überlänge?*\n**${ms(ms(passedTime, { long: true }))}**`)
+                return channel.send(`*Heute wieder überlänge?*\n**${moment.duration(passedTime).humanize(true)}**`)
             default:
                 return;
         }
@@ -100,7 +99,7 @@ function recordingPresence (client: AkairoClient, passedTime: number) {
     client.user.setPresence({
         activity: {
             type: 'CUSTOM_STATUS',
-            name: `Recording: ${ms(ms(passedTime))}`
+            name: `Recording: ${moment.duration(passedTime).humanize(true)}`
         },
         status: 'dnd',
         afk: true

@@ -98,7 +98,7 @@ export default class StatsCommand extends Command {
 					• Beigetreten ${message.guild.name}: ${channelDate.format(`DD. [${channelMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
 					• Discord.js: v${Discord.version}
 					• NodeJS: ${process.version/*@ts-ignore*/}
-					• Prefix: ${this.client.guildsettings.get(message.guild, 'config.prefix', botConfig.botDefaultPrefix)}
+					• Prefix: ${this.handler.prefix}
 					• Uptime: ${moment.duration(this.client.uptime!).humanize(true)}
 					• RAM Nutzung: ${memUsed}MB genutzt/${memAlloc}MB zugewiesen (${memPercent}%)
 					`,
