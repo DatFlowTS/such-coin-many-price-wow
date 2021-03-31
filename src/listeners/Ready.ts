@@ -7,6 +7,8 @@ import BotClient from '../client/BotClient';
 import botConfig from '../config/botConfig';
 import fs from 'fs';
 
+const path: string = "/home/datflow/RadioRexfordBot";
+
 export default class ReadyListener extends Listener {
 	public constructor() {
 		super('ready', {
@@ -18,15 +20,37 @@ export default class ReadyListener extends Listener {
 
 	public exec(): void {
         const client: AkairoClient = this.client;
-        setInterval(checkForRecordTimestamp, 30000, [client, botConfig.botDirectory]);
+        defaultPresence(client);
+        setInterval(checkForRecordTimestamp, 30000, [client]);
+
+        console.log(stripIndents`
+		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
+		Copyright (C) 2021 DatFlow#0001
+			
+			Contact:
+			datflow@radio-rexford.com
+			<https://radio-rexford.com>
+
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Affero General Public License as published
+		by the Free Software Foundation, either version 3 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Affero General Public License for more details.
+
+		You should have received a copy of the GNU Affero General Public License
+		along with this program.  If not, see <https://www.gnu.org/licenses/>.
+		`);
     }
 }
 
-async function checkForRecordTimestamp (client: AkairoClient, path: String) {
-    let checkString = fs.readFile(`${path}goTimestamp.json`, function (err) {
-        if(err) {
-            return console.log(err.stack)
-        }
+async function checkForRecordTimestamp (client: AkairoClient) {
+    let checkString = fs.readFile(`${path}goTimestamp.json`, function (err, data) {
+        if(err) return console.log(err.stack)
+        return data
     });
 
     let check: String = JSON.parse(JSON.stringify(checkString));

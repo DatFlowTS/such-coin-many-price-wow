@@ -2,7 +2,6 @@ import { Command, Argument } from 'discord-akairo';
 import { Message, MessageEmbed, GuildMember } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
-import 'moment-duration-format';
 
 export default class UserInfoCommand extends Command {
     public constructor() {

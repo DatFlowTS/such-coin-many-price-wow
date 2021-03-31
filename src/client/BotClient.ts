@@ -18,6 +18,7 @@ declare module 'discord-akairo' {
 interface BotOptions {
 	token?: string;
 	owners?: string[];
+	botDir?: string;
 }
 
 export default class BotClient extends AkairoClient {
@@ -53,7 +54,7 @@ export default class BotClient extends AkairoClient {
 		super({
 			ownerID: config.owners,
 			shards: 'auto',
-			shardCount: 1,
+			shardCount: 1
 		});
 
 		//@ts-ignore

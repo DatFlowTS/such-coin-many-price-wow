@@ -2,7 +2,6 @@ import { Command } from 'discord-akairo';
 import { Message, MessageEmbed, Role, TextChannel, NewsChannel } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
-import 'moment-duration-format';
 
 interface Permissions {
     [key: string]: string;

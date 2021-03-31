@@ -2,7 +2,6 @@ import { Command } from 'discord-akairo';
 import { Message, MessageEmbed, GuildChannel, DMChannel, TextChannel } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
-import 'moment-duration-format';
 
 export default class ChannelInfoCommand extends Command {
     public constructor() {
