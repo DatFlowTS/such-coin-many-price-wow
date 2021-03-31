@@ -32,5 +32,8 @@ export default class GoCommand extends Command {
 				return console.log(err.stack)
 			}
 		})
+
+		if (message.deletable) message.delete();
+		return message.reply('Aufnahme gestartet!')
 	}
 }
