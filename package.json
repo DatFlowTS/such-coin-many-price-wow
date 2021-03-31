@@ -9,7 +9,8 @@
     "moment": "*",
     "ms": "*",
     "rss-parser": "*",
-    "common-tags": "*"
+    "common-tags": "*",
+    "node-emoji": "*"
   },
   "devDependencies": {
     "@mrboolean/envconfig": "*",
