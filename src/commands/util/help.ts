@@ -41,7 +41,7 @@ export default class HelpCommand extends Command {
 
 
 
-        const prefix = await (this.handler.prefix as PrefixSupplier)(message);
+        const prefix = this.handler.prefix;
         var rnd = Math.floor(Math.random() * prefix.length);
         if (rnd === prefix.length) rnd = rnd - 1;
         if (!command) {
