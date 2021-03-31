@@ -30,6 +30,9 @@ export default class HelpCommand extends Command {
         if (message.deletable && !message.deleted) message.delete();
         
         // ------------------------------------
+        // ---------- MODS --------------------
+        var isMod: boolean = message.member.hasPermission('MANAGE_MESSAGES');
+        // ------------------------------------
         // ---------- DEVS --------------------
         var isDev: boolean = owners.includes(message.author.id);
         // ------------------------------------
@@ -56,10 +59,18 @@ export default class HelpCommand extends Command {
                 var categoryName: string = category.id.replace(/(\b\w)/gi, (lc): string => lc.toUpperCase());
 
                 var pubCats: string[] = ['Info', 'Util'];
+                var modCats: string[] = ['Info', 'Util', 'Moderation'];
 
                 var catSize: number;
 
-                if (isDev && categoryName !== 'Default') {
+                if(isMod && !isDev && modCats.includes(categoryName)) {
+                    catSize = category.filter((cmd): boolean => cmd.aliases.length > 0).size
+                    embed.addField(
+                        `⇒ ${categoryName} (${catSize} commands)`,
+                        `${category.filter((cmd): boolean => cmd.aliases.length > 0).map((cmd): string => `\`${cmd.aliases[0]}\``).join(' | ')}`
+                    );
+                    cmdSize += catSize;
+                }else if (isDev && categoryName !== 'Default') {
                     catSize = category.filter((cmd): boolean => cmd.aliases.length > 0).size
                     embed.addField(
                         `⇒ ${categoryName} (${catSize} commands)`,

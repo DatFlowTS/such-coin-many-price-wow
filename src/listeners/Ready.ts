@@ -1,11 +1,12 @@
 import { stripIndents } from 'common-tags';
 import { AkairoClient, Listener } from 'discord-akairo';
 import { MessageEmbed, Webhook, TextChannel, User } from 'discord.js';
-import moment from 'moment';
+import moment, { duration } from 'moment';
 import ms from 'ms';
 import BotClient from '../client/BotClient';
 import botConfig from '../config/botConfig';
 import fs from 'fs';
+import 'moment-duration-format';
 
 const path: string = "/home/datflow/RadioRexfordBot/";
 
@@ -22,6 +23,7 @@ export default class ReadyListener extends Listener {
         const client = this.client;
         defaultPresence(client);
         setInterval(checkForRecordTimestamp, 30000, client);
+        setInterval(recordingReminder, 60000, client);
 
         console.log(stripIndents`
 		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
@@ -50,37 +52,22 @@ export default class ReadyListener extends Listener {
 async function checkForRecordTimestamp (client: AkairoClient) {
     let checkString = fs.readFileSync(`${path}goTimestamp.json`, { encoding: 'utf-8' });
 
-    console.log(checkString);
+    let checkArr = checkString.split(",");
 
-    let check = JSON.parse(JSON.stringify(checkString));
+    var timestamp: number = parseInt(checkArr[0].replace(new RegExp('{"timestamp":'), ''));
+    var channelID: string = checkArr[1].replace(new RegExp('"channelID":"'), '').replace(new RegExp('"}'), '');
 
-    if (check.timestamp == 0) {
+    if (timestamp == 0) {
         // do simply nothing
         if (client.user.presence.status !== 'online') return defaultPresence(client);
         return
     } else {
-        var timestamp: number = check.timestamp;
-        var channelID: string = check.channelID;
-
         let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
         let now: number = Date.now();
 
         var passedTime: number = now - timestamp;
 
         recordingPresence(client, passedTime);
-
-        switch (timePassed(passedTime)) {
-            case 1:
-                return channel.send(`**${moment.duration(passedTime).humanize(true)}**`)
-            case 2:
-                return channel.send(`*Es wird langsam eng...*\n**${moment.duration(passedTime).humanize(true)}**`)
-            case 3:
-                return channel.send(`*Jetzt ist es lang genug!*\n**${moment.duration(passedTime).humanize(true)}**`)
-            case 4:
-                return channel.send(`*Heute wieder überlänge?*\n**${moment.duration(passedTime).humanize(true)}**`)
-            default:
-                return;
-        }
     }
 }
 
@@ -98,8 +85,8 @@ function defaultPresence (client: AkairoClient) {
 function recordingPresence (client: AkairoClient, passedTime: number) {
     client.user.setPresence({
         activity: {
-            type: 'CUSTOM_STATUS',
-            name: `Recording: ${moment.duration(passedTime).humanize(true)}`
+            type: 'PLAYING',
+            name: `Recording: ${moment.duration(passedTime).format('HH:mm:ss')}`
         },
         status: 'dnd',
         afk: true
@@ -107,9 +94,43 @@ function recordingPresence (client: AkairoClient, passedTime: number) {
 }
 
 function timePassed (passedTime: number): number {
-    if (passedTime >= 600000) return 1
-    if (passedTime >= 2700000) return 2
-    if (passedTime >= 3600000) return 3
     if (passedTime >= 4800000) return 4
+    if (passedTime >= 3600000) return 3
+    if (passedTime >= 2700000) return 2
+    if (passedTime >= 600000) return 1
     return 0
+}
+
+function recordingReminder (client: AkairoClient) {
+    let checkString = fs.readFileSync(`${path}goTimestamp.json`, { encoding: 'utf-8' });
+
+    let checkArr = checkString.split(",");
+
+    var timestamp: number = parseInt(checkArr[0].replace(new RegExp('{"timestamp":'), ''));
+    var channelID: string = checkArr[1].replace(new RegExp('"channelID":"'), '').replace(new RegExp('"}'), '');
+
+    let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
+    let now: number = Date.now();
+
+    var passedTime: number = now - timestamp;
+
+    var reminder: string;
+
+    switch (timePassed(passedTime)) {
+        case 1:
+            reminder = `**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            break;
+        case 2:
+            reminder = `*es wird langsam eng...*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            break;
+        case 3:
+            reminder = `*jetzt ist es lang genug!*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            break;
+        case 4:
+            reminder = `*heute wieder überlänge?*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            break;
+        default:
+            break;
+    }
+    return channel.send('@everyone, ' + reminder);
 }
