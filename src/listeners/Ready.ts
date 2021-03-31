@@ -75,7 +75,7 @@ function defaultPresence (client: AkairoClient) {
     client.user.setPresence({
         activity: {
             type: 'LISTENING',
-            name: 'Radio Rexford'
+            name: `Radio Rexford [${botConfig.botDefaultPrefix}help]`
         },
         status: 'online',
         afk: false
