@@ -25,7 +25,9 @@ export default class TestCommand extends Command {
     public async exec(message: Message): Promise<Message | Message[] | void> {
         if (message.deletable && !message.deleted) message.delete();
 
-        
+        message.channel.send(message.author.tag);
+        message.channel.send(message.author.avatarURL({dynamic:true}))
+        message.channel.send(`${message.author}`);
 
     }
 }
