@@ -112,7 +112,7 @@ function recordingReminder (client: AkairoClient) {
     let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
     let now: number = Date.now();
 
-    var passedTime: number = now - timestamp;
+    var passedTime: number = timestamp >= now - 6000000 ? now - timestamp : 0;
 
     var reminder: string = 'null';
 
@@ -133,7 +133,7 @@ function recordingReminder (client: AkairoClient) {
             break;
     }
     if (reminder !== 'null') {
-        return channel.send('@everyone, ' + reminder);
+        return channel.send(reminder);
     }
     return;
 }
