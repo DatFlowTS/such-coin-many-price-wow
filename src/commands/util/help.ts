@@ -87,39 +87,54 @@ export default class HelpCommand extends Command {
                 }
             }
 
-            let now: moment.Moment = moment.utc(Date.now());
-            let Month: string = now.format('MMMM');
-            let nowMonth: string;
-
-            switch (Month.toLowerCase()) {
-                case 'january':
-                    nowMonth = 'Januar'
-                case 'february':
-                    nowMonth = 'Februar'
-                case 'march':
-                    nowMonth = 'März'
-                case 'april':
-                    nowMonth = 'April'
-                case 'may':
-                    nowMonth = 'Mai'
-                case 'june':
-                    nowMonth = 'Juni'
-                case 'july':
-                    nowMonth = 'Juli'
-                case 'august':
-                    nowMonth = 'August'
-                case 'september':
-                    nowMonth = 'September'
-                case 'october':
-                    nowMonth = 'Oktober'
-                case 'november':
-                    nowMonth = 'November'
+            let now: moment.Moment = moment(Date.now());
+            let nowMonth: string = now.format('MMM');
+            let nowMonthString: string;
+    
+            switch (nowMonth) {
+                case 'Jan':
+                    nowMonthString = 'Januar'
+                    break;
+                case 'Feb':
+                    nowMonthString = 'Februar'
+                    break;
+                case 'Mar':
+                    nowMonthString = 'März'
+                    break;
+                case 'Apr':
+                    nowMonthString = 'April'
+                    break;
+                case 'May':
+                    nowMonthString = 'Mai'
+                    break;
+                case 'Jun':
+                    nowMonthString = 'Juni'
+                    break;
+                case 'Jul':
+                    nowMonthString = 'Juli'
+                    break;
+                case 'Aug':
+                    nowMonthString = 'August'
+                    break;
+                case 'Sep':
+                    nowMonthString = 'September'
+                    break;
+                case 'Oct':
+                    nowMonthString = 'Oktober'
+                    break;
+                case 'Nov':
+                    nowMonthString = 'November'
+                    break;
+                case 'Dec':
+                    nowMonthString = 'Dezember'
+                    break;
                 default:
-                    nowMonth = 'Dezember'
+                    nowMonthString = nowMonth;
+                    break;
             }
 
             embed.setFooter(
-                `${cmdSize} befehle insgesamt ✧ angefragt von ${message.author.tag} ✧ ${now.format(`DD. [${nowMonth}] YYYY [|] HH:mm:ss [UTC]`)}`,
+                `${cmdSize} befehle insgesamt ✧ angefragt von ${message.author.tag} ✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`,
                 `${message.author.displayAvatarURL({ format: 'png', dynamic: true })}`
             )
 

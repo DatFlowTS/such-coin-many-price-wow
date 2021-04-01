@@ -64,35 +64,50 @@ export default class RoleInfoCommand extends Command {
 
     public async exec(message: Message, { role }: { role: Role }): Promise<Message | Message[]> {
 
-        let roleDate: moment.Moment = moment.utc(role.createdAt);
-        let roleMonth: string = roleDate.format('MMMM');
+        let roleDate: moment.Moment = moment(role.createdAt);
+		let roleMonth: string = roleDate.format('MMM');
         let roleMonthString: string;
 
-        switch (roleMonth.toLowerCase()) {
-            case 'january':
+        switch (roleMonth) {
+            case 'Jan':
                 roleMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 roleMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 roleMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 roleMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 roleMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 roleMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 roleMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 roleMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 roleMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 roleMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 roleMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 roleMonthString = 'Dezember'
+				break;
+			default:
+				roleMonthString = roleMonth;
+				break;
         }
 
         const permissions = Object.keys(PERMISSIONS).filter(
@@ -109,7 +124,7 @@ export default class RoleInfoCommand extends Command {
 				• Gruppiert: ${role.hoist ? 'Ja' : 'Nein'}
                 • Pingbar: ${role.mentionable ? 'Ja' : 'Nein'}
                 • Mitglieder: ${role.guild.members.cache.filter((m) => m.roles.cache.has(role.id)).size}
-				• Erstellt: ${roleDate.format(`DD. [${roleMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+				• Erstellt: ${roleDate.format(`DD. [${roleMonthString}] YYYY [|] HH:mm:ss`)}
             `)
             .addField(
                 '⇒ Berechtigungen',

@@ -31,66 +31,96 @@ export default class UserInfoCommand extends Command {
 
         const { user } = member;
 
-        let userDate: moment.Moment = moment.utc(user.createdAt);
-        let userMonth: string = userDate.format('MMMM');
+        let userDate: moment.Moment = moment(user.createdAt);
+		let userMonth: string = userDate.format('MMM');
         let userMonthString: string;
 
-        switch (userMonth.toLowerCase()) {
-            case 'january':
+        switch (userMonth) {
+            case 'Jan':
                 userMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 userMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 userMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 userMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 userMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 userMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 userMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 userMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 userMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 userMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 userMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 userMonthString = 'Dezember'
+				break;
+			default:
+				userMonthString = userMonth;
+				break;
         }
 
-        let memberDate: moment.Moment = moment.utc(member.joinedAt);
-        let memberMonth: string = memberDate.format('MMMM');
+        let memberDate: moment.Moment = moment(member.joinedAt);
+		let memberMonth: string = memberDate.format('MMM');
         let memberMonthString: string;
 
-        switch (memberMonth.toLowerCase()) {
-            case 'january':
+        switch (memberMonth) {
+            case 'Jan':
                 memberMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 memberMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 memberMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 memberMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 memberMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 memberMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 memberMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 memberMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 memberMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 memberMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 memberMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 memberMonthString = 'Dezember'
+				break;
+			default:
+				memberMonthString = memberMonth;
+				break;
         }
 
         let roleString: string = member.roles.cache.filter((r) => r.id !== message.guild.id).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><@&${roles.id}>`).join(' ');
@@ -104,7 +134,7 @@ export default class UserInfoCommand extends Command {
                 stripIndents`
                 ${member.nickname == undefined ? '• Keinen Nicknamen' : ` • Nickname: ${member.nickname}`}
 				• Rollen ${roleString.length < 896 ? `(${roleSize}): ${roleString}` : `: ${roleSize}`}
-                • Beigetreten: ${memberDate.format(`DD. [${memberMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+                • Beigetreten: ${memberDate.format(`DD. [${memberMonthString}] YYYY [|] HH:mm:ss`)}
                 ${member.guild.owner == member ? '• Server Owner' : ''}
             `)
             .addField(
@@ -112,7 +142,7 @@ export default class UserInfoCommand extends Command {
                 stripIndents`
 				• ID: ${member.id}
 				• Benutzername: ${member.user.tag}
-                • Account erstellt: ${userDate.format(`DD. [${userMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+                • Account erstellt: ${userDate.format(`DD. [${userMonthString}] YYYY [|] HH:mm:ss`)}
 				• Status: ${user.presence.status.toUpperCase()}
                 • Aktivität: ${user.presence.activities[0] ? `${user.presence.activities[0].type}: ${user.presence.activities[0].name}` : 'Keine'}
             `)

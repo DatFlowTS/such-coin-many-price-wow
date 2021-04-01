@@ -29,35 +29,50 @@ export default class ChannelInfoCommand extends Command {
 
     public async exec(message: Message, { channel }: { channel: TextChannel }): Promise<Message | Message[]> {
 
-        let channelDate: moment.Moment = moment.utc(channel.createdAt);
-        let channelMonth: string = channelDate.format('MMMM');
+        let channelDate: moment.Moment = moment(channel.createdAt);
+		let channelMonth: string = channelDate.format('MMM');
         let channelMonthString: string;
 
-        switch (channelMonth.toLowerCase()) {
-            case 'january':
+        switch (channelMonth) {
+            case 'Jan':
                 channelMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 channelMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 channelMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 channelMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 channelMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 channelMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 channelMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 channelMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 channelMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 channelMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 channelMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 channelMonthString = 'Dezember'
+				break;
+			default:
+				channelMonthString = channelMonth;
+				break;
         }
 
         const embed = new MessageEmbed()
@@ -69,7 +84,7 @@ export default class ChannelInfoCommand extends Command {
                 • Typ: ${channel.type}
 				• Topic: ${channel.topic ? channel.topic : 'None'}
 				• NSFW: ${channel.nsfw ? 'Ja' : 'Nein'}
-				• Erstellt: ${channelDate.format(`DD. [${channelMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+				• Erstellt: ${channelDate.format(`DD. [${channelMonthString}] YYYY [|] HH:mm:ss`)}
 			    `
             )
             .setThumbnail(message.guild!.iconURL()!);

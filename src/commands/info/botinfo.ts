@@ -14,7 +14,7 @@ import {
 	version,
 	description,
 } from '../../../package.json';
-import botConfig from '../../config/botConfig';
+import 'moment-duration-format';
 
 export default class StatsCommand extends Command {
 	public constructor() {
@@ -55,35 +55,50 @@ export default class StatsCommand extends Command {
 		var partneredServers: number = this.client.guilds.cache.filter((g) => g.partnered).size
 		var verifiedServers: number = this.client.guilds.cache.filter((g) => g.verified).size
 
-		let channelDate: moment.Moment = moment.utc(message.guild.me!.joinedAt);
-		let channelMonth: string = channelDate.format('MMMM');
-        let channelMonthString: string;
+		let botDate: moment.Moment = moment(message.guild.me!.joinedAt);
+		let botMonth: string = botDate.format('MMM');
+        let botMonthString: string;
 
-        switch (channelMonth.toLowerCase()) {
-            case 'january':
-                channelMonthString = 'Januar'
-            case 'february':
-                channelMonthString = 'Februar'
-            case 'march':
-                channelMonthString = 'März'
-            case 'april':
-                channelMonthString = 'April'
-            case 'may':
-                channelMonthString = 'Mai'
-            case 'june':
-                channelMonthString = 'Juni'
-            case 'july':
-                channelMonthString = 'Juli'
-            case 'august':
-                channelMonthString = 'August'
-            case 'september':
-                channelMonthString = 'September'
-            case 'october':
-                channelMonthString = 'Oktober'
-            case 'november':
-                channelMonthString = 'November'
-            default:
-                channelMonthString = 'Dezember'
+        switch (botMonth) {
+            case 'Jan':
+                botMonthString = 'Januar'
+				break;
+            case 'Feb':
+                botMonthString = 'Februar'
+				break;
+            case 'Mar':
+                botMonthString = 'März'
+				break;
+            case 'Apr':
+                botMonthString = 'April'
+				break;
+            case 'May':
+                botMonthString = 'Mai'
+				break;
+            case 'Jun':
+                botMonthString = 'Juni'
+				break;
+            case 'Jul':
+                botMonthString = 'Juli'
+				break;
+            case 'Aug':
+                botMonthString = 'August'
+				break;
+            case 'Sep':
+                botMonthString = 'September'
+				break;
+            case 'Oct':
+                botMonthString = 'Oktober'
+				break;
+            case 'Nov':
+                botMonthString = 'November'
+				break;
+            case 'Dec':
+                botMonthString = 'Dezember'
+				break;
+			default:
+				botMonthString = botMonth;
+				break;
         }
 
 		const embed: MessageEmbed = new MessageEmbed({
@@ -95,11 +110,11 @@ export default class StatsCommand extends Command {
 				{
 					name: '⇒ Allgemein',
 					value: stripIndents`
-					• Beigetreten ${message.guild.name}: ${channelDate.format(`DD. [${channelMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+					• ${message.guild.name} Beigetreten: ${botDate.format(`DD. [${botMonthString}] YYYY [|] HH:mm:ss`)}
 					• Discord.js: v${Discord.version}
 					• NodeJS: ${process.version/*@ts-ignore*/}
 					• Prefix: ${this.handler.prefix}
-					• Uptime: ${moment.duration(this.client.uptime!).humanize(true)}
+					• Uptime: ${moment.duration(this.client.uptime!).format('DD[d] HH[h] mm[min] ss[sek]')}
 					• RAM Nutzung: ${memUsed}MB genutzt/${memAlloc}MB zugewiesen (${memPercent}%)
 					`,
 					inline: true

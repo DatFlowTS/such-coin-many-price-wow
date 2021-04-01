@@ -41,35 +41,50 @@ export default class EmojiInfoCommand extends Command {
 
     public async exec(message: Message, { emoji }: { emoji: any }): Promise<Message | Message[]> {
 
-        let emojiDate: moment.Moment = moment.utc(emoji.createdAt);
-        let emojiMonth: string = emojiDate.format('MMMM');
+        let emojiDate: moment.Moment = moment(emoji.createdAt);
+		let emojiMonth: string = emojiDate.format('MMM');
         let emojiMonthString: string;
 
-        switch (emojiMonth.toLowerCase()) {
-            case 'january':
+        switch (emojiMonth) {
+            case 'Jan':
                 emojiMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 emojiMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 emojiMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 emojiMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 emojiMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 emojiMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 emojiMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 emojiMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 emojiMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 emojiMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 emojiMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 emojiMonthString = 'Dezember'
+				break;
+			default:
+				emojiMonthString = emojiMonth;
+				break;
         }
 
         const embed = new MessageEmbed()
@@ -81,7 +96,7 @@ export default class EmojiInfoCommand extends Command {
                 '⇒ Info',
                 stripIndents`
 				• Identifier: \`<${emoji.identifier}>\`
-				• Erstellt: ${emojiDate.format(`DD. [${emojiMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+				• Erstellt: ${emojiDate.format(`DD. [${emojiMonthString}] YYYY [|] HH:mm:ss`)}
                 • URL: ${emoji.url}
             `);
             embed.setImage(emoji.url);

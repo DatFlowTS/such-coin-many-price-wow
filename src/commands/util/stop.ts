@@ -9,7 +9,7 @@ export default class StopCommand extends Command {
 			aliases: ['stop', 'ende', 'stopp', 'beenden', 'end'],
 			category: 'Util',
 			description: {
-				content: 'Beendet Erinnerung an vergangene Aufnahmezeit.',
+				content: 'Beendet Erinnerung an vergangene Aufnahmezeit. Nur für den Radio Rexford HQ Server!\nDieser Befehl wurde ausschließlich für das Podcast-Team erstellt, damit sie die Zeit besser im Blick behalten können.',
 				usages: 'stop',
 			},
 			ratelimit: 3,
@@ -17,23 +17,36 @@ export default class StopCommand extends Command {
 	}
 
 	public async exec(message: Message) {
-		const timeStamp: number = 0;
-        const channelID: string = "0";
 
-		const data = {
-			"timestamp": timeStamp,
-			"channelID": channelID
-		};
-		const dataString: string = JSON.stringify(data);
-
-		fs.writeFile(`${botConfig.botDirectory}goTimestamp.json`, dataString, 'utf8', function (err) {
-			if(err) {
-				message.reply(`\`\`\`js\n${err.stack}\`\`\``)
-                return console.log(err.stack)
+		const allowedGuilds: string[] = ["729745265430364210","606069531592491048"];
+		try {
+			if (!message.guild || !allowedGuilds.includes(message.guild!.id)) {
+				return message.util!.reply(`Das ist hier nicht erlaubt!\nSchreibe \`${this.handler.prefix}help ${this.aliases[0]}\`, um mehr zu erfahren.`)
+				.then(async m => {
+					if (message.deletable) message.delete();
+					return await m.delete({timeout: 10000});
+				})
 			}
-		})
-
-		if (message.deletable) message.delete();
-		return message.reply('Aufnahme gestoppt!')
+			const timeStamp: number = 0;
+			const channelID: string = "0";
+	
+			const data = {
+				"timestamp": timeStamp,
+				"channelID": channelID
+			};
+			const dataString: string = JSON.stringify(data);
+	
+			fs.writeFile(`${botConfig.botDirectory}goTimestamp.json`, dataString, 'utf8', function (err) {
+				if(err) {
+					message.reply(`\`\`\`js\n${err.stack}\`\`\``)
+					return console.log(err.stack)
+				}
+			})
+	
+			if (message.deletable) message.delete();
+			return message.reply('Aufnahme gestoppt!')
+		} catch (err) {
+			if (err) return console.log(err.stack)
+		}
 	}
 }

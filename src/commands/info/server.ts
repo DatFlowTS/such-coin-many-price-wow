@@ -50,35 +50,50 @@ export default class ServerInfoCommand extends Command {
 
     public async exec(message: Message): Promise<Message | Message[]> {
 
-        let guildDate: moment.Moment = moment.utc(message.guild!.createdAt);
-        let guildMonth: string = guildDate.format('MMMM');
+        let guildDate: moment.Moment = moment(message.guild!.createdAt);
+		let guildMonth: string = guildDate.format('MMM');
         let guildMonthString: string;
 
-        switch (guildMonth.toLowerCase()) {
-            case 'january':
+        switch (guildMonth) {
+            case 'Jan':
                 guildMonthString = 'Januar'
-            case 'february':
+				break;
+            case 'Feb':
                 guildMonthString = 'Februar'
-            case 'march':
+				break;
+            case 'Mar':
                 guildMonthString = 'März'
-            case 'april':
+				break;
+            case 'Apr':
                 guildMonthString = 'April'
-            case 'may':
+				break;
+            case 'May':
                 guildMonthString = 'Mai'
-            case 'june':
+				break;
+            case 'Jun':
                 guildMonthString = 'Juni'
-            case 'july':
+				break;
+            case 'Jul':
                 guildMonthString = 'Juli'
-            case 'august':
+				break;
+            case 'Aug':
                 guildMonthString = 'August'
-            case 'september':
+				break;
+            case 'Sep':
                 guildMonthString = 'September'
-            case 'october':
+				break;
+            case 'Oct':
                 guildMonthString = 'Oktober'
-            case 'november':
+				break;
+            case 'Nov':
                 guildMonthString = 'November'
-            default:
+				break;
+            case 'Dec':
                 guildMonthString = 'Dezember'
+				break;
+			default:
+				guildMonthString = guildMonth;
+				break;
         }
 
         let guildFeatures: string[] = message.guild!.features.map((f, k): string => `• ${GUILD_FEATURES[f]}\n`)
@@ -155,12 +170,12 @@ export default class ServerInfoCommand extends Command {
                 • Rollen: ${message.guild!.roles.cache.size}
                 <:empty:744513757962829845>• Administratorrollen: ${adminRoleSize > 0 && adminRoleString.length < 768 ? `(${adminRoleSize})${adminRoleString}` : `${adminRoleSize}`}
                 • Region: ${message.guild!.region}
-                • Erstellt: ${guildDate.format(`DD. [${guildMonthString}] YYYY [|] HH:mm:ss [UTC]`)}
+                • Erstellt: ${guildDate.format(`DD. [${guildMonthString}] YYYY [|] HH:mm:ss`)}
                 • Verifikationsstufe: ${HUMAN_LEVELS[message.guild!.verificationLevel]}
             `)
 
 
-        let now: moment.Moment = moment.utc(Date.now());
+        let now: moment.Moment = moment(Date.now());
         let nowMonth: string = guildDate.format('MMMM');
         let nowMonthString: string;
 
@@ -191,7 +206,7 @@ export default class ServerInfoCommand extends Command {
                 nowMonthString = 'Dezember'
         }
 
-        embed.setFooter(`Meitglieder nach Status: ${onMembers > 0 ? `${on} ${onMembers} ✧ ` : ''}${afkMembers > 0 ? `${afk} ${afkMembers} ✧ ` : ''}${dndMembers > 0 ? `${dnd} ${dndMembers} ✧ ` : ''}${offMembers > 0 ? `${off} ${offMembers} ✧ ` : ''}${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss [UTC]`)}`)
+        embed.setFooter(`Meitglieder nach Status: ${onMembers > 0 ? `${on} ${onMembers} ✧ ` : ''}${afkMembers > 0 ? `${afk} ${afkMembers} ✧ ` : ''}${dndMembers > 0 ? `${dnd} ${dndMembers} ✧ ` : ''}${offMembers > 0 ? `${off} ${offMembers} ✧ ` : ''}${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`)
 
 
 
