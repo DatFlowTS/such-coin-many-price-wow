@@ -60,19 +60,19 @@ async function checkForRecordTimestamp (client: AkairoClient) {
     if (timestamp == 0) {
         // do simply nothing
         if (client.user.presence.status !== 'online') return defaultPresence(client);
-        return
+        return;
     } else {
         let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
         let now: number = Date.now();
 
         var passedTime: number = now - timestamp;
 
-        recordingPresence(client, passedTime);
+        return recordingPresence(client, passedTime);
     }
 }
 
 function defaultPresence (client: AkairoClient) {
-    client.user.setPresence({
+    return client.user.setPresence({
         activity: {
             type: 'LISTENING',
             name: `Radio Rexford [${botConfig.botDefaultPrefix}help]`
@@ -83,7 +83,7 @@ function defaultPresence (client: AkairoClient) {
 }
 
 function recordingPresence (client: AkairoClient, passedTime: number) {
-    client.user.setPresence({
+    return client.user.setPresence({
         activity: {
             type: 'PLAYING',
             name: `Recording: ${moment.duration(passedTime).format('hh:mm:ss')}`
@@ -104,7 +104,7 @@ function recordingReminder (client: AkairoClient) {
     const channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
     const now: number = Date.now();
 
-    var passedTime: number;
+    var passedTime: number = now - timestamp;
 
     var reminder: string = 'null';
 
