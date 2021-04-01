@@ -22,7 +22,7 @@ export default class ReadyListener extends Listener {
 	public exec(): void {
         const client = this.client;
         defaultPresence(client);
-        setInterval(checkForRecordTimestamp, 30000, client);
+        setInterval(checkForRecordTimestamp, 3333, client);
         setInterval(recordingReminder, 600000, client);
 
         console.log(stripIndents`
