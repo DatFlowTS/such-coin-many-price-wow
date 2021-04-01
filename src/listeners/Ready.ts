@@ -114,7 +114,7 @@ function recordingReminder (client: AkairoClient) {
 
     var passedTime: number = now - timestamp;
 
-    var reminder: string = '';
+    var reminder: string = 'null';
 
     switch (timePassed(passedTime)) {
         case 1:
@@ -132,7 +132,7 @@ function recordingReminder (client: AkairoClient) {
         default:
             break;
     }
-    if (reminder !== '') {
+    if (reminder !== 'null') {
         return channel.send('@everyone, ' + reminder);
     }
     return;

@@ -51,7 +51,7 @@ export default class PurgeCommand extends Command {
 
         if (!clientMember.permissions.has('MANAGE_MESSAGES')) return message.util!.reply('Ich darf hier keine Nachrichten löschen....');
 
-        if (amount < 2 || amount > 99) return message.util!.send('Du kannst nur zwischen 1 und 100 Nachrichten auf einmal löschen.');
+        if (amount < 2 || amount > 100) return message.util!.send('Du kannst nur zwischen 1 und 100 Nachrichten auf einmal löschen.');
 
         try {
             if (member && member != null) {
