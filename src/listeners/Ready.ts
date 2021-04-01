@@ -22,7 +22,7 @@ export default class ReadyListener extends Listener {
 	public exec(): void {
         const client = this.client;
         defaultPresence(client);
-        setInterval(checkForRecordTimestamp, 3333, client);
+        setInterval(checkForRecordTimestamp, 4567, client);
         setInterval(recordingReminder, 600000, client);
 
         console.log(stripIndents`
@@ -86,7 +86,7 @@ function recordingPresence (client: AkairoClient, passedTime: number) {
     client.user.setPresence({
         activity: {
             type: 'PLAYING',
-            name: `Recording: ${moment.duration(passedTime).format('HH:mm:ss')}`
+            name: `Recording: ${moment.duration(passedTime).format('hh:mm:ss')}`
         },
         status: 'dnd',
         afk: true
@@ -118,16 +118,16 @@ function recordingReminder (client: AkairoClient) {
 
     switch (timePassed(passedTime)) {
         case 1:
-            reminder = `**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            reminder = `**${moment.duration(passedTime).format('HH[h] mm[m] ss[s]')}**`
             break;
         case 2:
-            reminder = `*es wird langsam eng...*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            reminder = `*es wird langsam eng...*\n**${moment.duration(passedTime).format('HH[h] mm[m] ss[s]')}**`
             break;
         case 3:
-            reminder = `*jetzt ist es lang genug!*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            reminder = `*jetzt ist es lang genug!*\n**${moment.duration(passedTime).format('HH[h] mm[m] ss[s]')}**`
             break;
         case 4:
-            reminder = `*heute wieder überlänge?*\n**${moment.duration(passedTime).format('HH:mm:ss')}**`
+            reminder = `*heute wieder überlänge?*\n**${moment.duration(passedTime).format('HH[h] mm[m] ss[s]')}**`
             break;
         default:
             break;
