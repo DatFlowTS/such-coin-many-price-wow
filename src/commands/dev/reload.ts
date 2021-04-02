@@ -18,8 +18,6 @@ export default class ReloadCommand extends Command {
         //@ts-ignore
         await this.client.commandHandler.reloadAll();
         //@ts-ignore
-        await this.client.inhibitorHandler.reloadAll();
-        //@ts-ignore
         await this.client.listenerHandler.reloadAll();
 
         message.util!.send('Sucessfully reloaded.').then((m: Message): void => {
