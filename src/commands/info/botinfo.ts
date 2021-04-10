@@ -105,7 +105,7 @@ export default class StatsCommand extends Command {
 			color: message.guild.me!.displayColor,
 			description: stripIndents`
 			**${this.client.user!.username} Statistiken**\n
-			*${description}`,
+			*${description}*`,
 			fields: [
 				{
 					name: '⇒ Allgemein',
@@ -134,7 +134,7 @@ export default class StatsCommand extends Command {
 					value: stripIndents`
 					• ${serverCount} Server Gesamt
 					${boostedServerCount > 0 ? `${boostedServerCount > 1 ? `• ${boostedServerCount} geboostete Server` : `• ${boostedServerCount} geboosteter Server`}` : ''}${tier1ServerCount >= 1 ? `\n• ${tier1ServerCount} Tier 1 Server` : ''}${tier2ServerCount >= 1 ? `\n• ${tier2ServerCount} Tier 2 Server` : '' }${tier3ServerCount >= 1 ? `\n• ${tier3ServerCount} Tier 3 Server` : ''}
-					${verifiedServers >= 1 ? `\n• ${verifiedServers} Verified Server` : ''}${partneredServers >= 1 ? `\n• ${partneredServers} Pertnered Servers` : ''}
+					${verifiedServers >= 1 ? `\n• ${verifiedServers} Verified Server` : ''}${partneredServers >= 1 ? `\n• ${partneredServers} Partnered Server` : ''}
 					`,
 					inline: true
 				},
@@ -176,7 +176,7 @@ export default class StatsCommand extends Command {
 					inline: true
 				},
 				{
-					name: '⇒ Development server',
+					name: '⇒ Development Server',
 					value: '[Casual Coding Corner](https://discord.gg/GrmxKeZ \'This is my home!\')',
 					inline: true
 				},
