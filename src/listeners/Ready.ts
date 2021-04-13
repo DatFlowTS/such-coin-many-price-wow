@@ -241,8 +241,10 @@ function fetchGuilds ( client: AkairoClient ): string[] {
 	let guilds: string[] = [];
 
 	if ( client.guilds.cache.size > 0 ) {
-		client.guilds.cache.forEach( async g => {
-			guilds.push(`\n"${g.name}" [${g.id}] by ${g.owner.user.tag} [${g.owner.id}]`)
+		let index: number = 0;
+		client.guilds.cache.forEach( async (g) => {
+			index++;
+			guilds.push(`\n\n${index}. "${g.name}" [${g.id}] by ${g.owner.user.tag} [${g.owner.id}]`)
 		})
 	} else {
 		guilds = ["none cached yet"]
