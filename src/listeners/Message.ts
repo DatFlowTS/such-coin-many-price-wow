@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import { Message, TextChannel, User, GuildMember, MessageEmbed } from 'discord.js';
+import { Message, TextChannel, User, GuildMember, MessageEmbed, MessageAttachment } from 'discord.js';
 import moment from 'moment';
 
 export default class MessageListener extends Listener {
@@ -76,6 +76,14 @@ export default class MessageListener extends Listener {
                 text: `${(msg.channel as TextChannel).name} @ ${msg.guild.name} [${msg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
             }
         })
+
+        if (msg.attachments.size > 0) {
+            let attachments: MessageAttachment[] = []
+            msg.attachments.forEach(a => {
+                attachments.push(a);
+            })
+            embed.attachFiles(attachments);
+        }
 
         try {
             let logChannel: TextChannel = this.client.channels.cache.get('831406532566319155') as TextChannel

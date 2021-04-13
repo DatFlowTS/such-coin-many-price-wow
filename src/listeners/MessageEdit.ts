@@ -1,6 +1,6 @@
 import { stripIndents } from "common-tags";
 import { Listener } from "discord-akairo";
-import { Message, TextChannel, User, GuildMember, MessageEmbed } from "discord.js";
+import { Message, TextChannel, User, GuildMember, MessageEmbed, MessageAttachment } from "discord.js";
 import moment from "moment";
 
 export default class MessageUpdateListener extends Listener {
@@ -87,6 +87,13 @@ export default class MessageUpdateListener extends Listener {
                 text: `${(nMsg.channel as TextChannel).name} @ ${nMsg.guild.name} [${nMsg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
             }
         })
+        if (nMsg.attachments.size > 0) {
+            let attachments: MessageAttachment[] = []
+            nMsg.attachments.forEach(a => {
+                attachments.push(a);
+            })
+            embed.attachFiles(attachments);
+        }
 
         try {
             let logChannel: TextChannel = this.client.channels.cache.get('831406573057212477') as TextChannel
