@@ -22,7 +22,7 @@ export default class ReadyListener extends Listener {
         defaultPresence(client);
         setInterval(checkForRecordTimestamp, 4567, client);
         setInterval(recordingReminder, 600000, client);
-        setInterval(listGuilds, 600000, client)
+        setInterval(listGuilds, 56789, client)
 
         console.log(stripIndents`
 		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
