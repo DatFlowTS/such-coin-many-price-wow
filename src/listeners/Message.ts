@@ -69,7 +69,6 @@ export default class MessageListener extends Listener {
                     dynamic: true 
                 })
             },
-            title: "[ NEW MESSAGE ]",
             description: msg.content,
             footer: {
                 iconURL: msg.guild.iconURL({ dynamic:true }),

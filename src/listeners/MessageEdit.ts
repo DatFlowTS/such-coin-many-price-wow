@@ -71,7 +71,6 @@ export default class MessageUpdateListener extends Listener {
                     dynamic: true 
                 })
             },
-            title: "[ MESSAGE EDITED ]",
             fields: [
                 {
                     name: "Old Message",
