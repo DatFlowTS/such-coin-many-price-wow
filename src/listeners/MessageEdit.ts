@@ -15,6 +15,8 @@ export default class MessageUpdateListener extends Listener {
     public async exec(oMsg: Message, nMsg: Message): Promise<any> {
         if (!nMsg.guild && !oMsg.guild) return;
         if (nMsg.content == oMsg.content) return;
+        if (nMsg.guild.id == "606069531592491048") return;
+        if (nMsg.author.bot) return;
 
 		let now: moment.Moment = moment(Date.now());
 		let nowMonth: string = now.format('MMM');

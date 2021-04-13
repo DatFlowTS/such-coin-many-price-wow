@@ -12,7 +12,9 @@ export default class MessageListener extends Listener {
 	}
 
 	public async exec(msg: Message): Promise<any> {
-        if ( !msg.guild ) return;
+        if (!msg.guild) return;
+        if (msg.guild.id == "606069531592491048") return;
+        if (msg.author.bot) return;
 
 		let now: moment.Moment = moment(Date.now());
 		let nowMonth: string = now.format('MMM');
@@ -67,7 +69,7 @@ export default class MessageListener extends Listener {
                     dynamic: true 
                 })
             },
-            title: "[ MESSAGE EDITED ]",
+            title: "[ NEW MESSAGE ]",
             description: msg.content,
             footer: {
                 iconURL: msg.guild.iconURL({ dynamic:true }),
