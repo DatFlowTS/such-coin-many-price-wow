@@ -232,7 +232,7 @@ async function listGuilds ( client: AkairoClient ): Promise<Message | void> {
 		}
 	})
 	if (!oldEmbeds.includes(embed) || msg.embeds.length < 1) {
-		return await msg.edit(embed);
+		return await msg.edit("", embed);
 	}
 }
 
