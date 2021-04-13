@@ -71,6 +71,7 @@ export default class MessageUpdateListener extends Listener {
                     dynamic: true 
                 })
             },
+            color: nMsg.member.displayHexColor,
             fields: [
                 {
                     name: "Old Message",
