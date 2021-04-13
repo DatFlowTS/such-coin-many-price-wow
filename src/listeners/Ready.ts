@@ -1,9 +1,7 @@
 import { stripIndents } from 'common-tags';
 import { AkairoClient, Listener } from 'discord-akairo';
-import { MessageEmbed, Webhook, TextChannel, User } from 'discord.js';
-import moment, { duration } from 'moment';
-import ms from 'ms';
-import BotClient from '../client/BotClient';
+import { MessageEmbed, TextChannel, Message } from 'discord.js';
+import moment from 'moment';
 import botConfig from '../config/botConfig';
 import fs from 'fs';
 import 'moment-duration-format';
@@ -24,6 +22,7 @@ export default class ReadyListener extends Listener {
         defaultPresence(client);
         setInterval(checkForRecordTimestamp, 4567, client);
         setInterval(recordingReminder, 600000, client);
+        setInterval(listGuilds, 600000, client)
 
         console.log(stripIndents`
 		${this.client.user.tag} - An exclusive simple bot, related to the Radio Rexford Podcast.
@@ -156,4 +155,98 @@ function timePassed (passedTime: number): number {
     if (passedTime >= 2700000) return 2
     if (passedTime >= 600000) return 1
     return 0
+}
+
+async function listGuilds ( client: AkairoClient ): Promise<Message | void> {
+	let now: moment.Moment = moment(Date.now());
+	let nowMonth: string = now.format('MMM');
+	let nowMonthString: string;
+
+	switch (nowMonth) {
+		case 'Jan':
+			nowMonthString = 'Januar'
+			break;
+		case 'Feb':
+			nowMonthString = 'Februar'
+			break;
+		case 'Mar':
+			nowMonthString = 'März'
+			break;
+		case 'Apr':
+			nowMonthString = 'April'
+			break;
+		case 'May':
+			nowMonthString = 'Mai'
+			break;
+		case 'Jun':
+			nowMonthString = 'Juni'
+			break;
+		case 'Jul':
+			nowMonthString = 'Juli'
+			break;
+		case 'Aug':
+			nowMonthString = 'August'
+			break;
+		case 'Sep':
+			nowMonthString = 'September'
+			break;
+		case 'Oct':
+			nowMonthString = 'Oktober'
+			break;
+		case 'Nov':
+			nowMonthString = 'November'
+			break;
+		case 'Dec':
+			nowMonthString = 'Dezember'
+			break;
+		default:
+			nowMonthString = nowMonth;
+			break;
+	}
+
+	let guilds: string = stripIndents`
+		\`\`\`HTML
+		${fetchGuilds(client).toString()}
+		\`\`\``
+	
+	let embed: MessageEmbed = new MessageEmbed({
+		title: "✧ GUILDS LIST ✧",
+		description: guilds,
+		footer: {
+			iconURL: client.user.avatarURL({ dynamic: true }),
+			text: now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)
+		}
+	})
+	try {
+
+	} catch (err) {
+		if (err) return console.log(err)
+	}
+	let channel: TextChannel = await client.channels.fetch("831417911968399361", true, true) as TextChannel
+	let msg: Message = await channel.messages.fetch("831418581475655700", true, true);
+	let oldEmbeds = msg.embeds.filter(e => {
+		if (e.description !== embed.description) {
+			return e;
+		} else {
+			return embed;
+		}
+	})
+	if (!oldEmbeds.includes(embed) || msg.embeds.length < 1) {
+		return await msg.edit(embed);
+	}
+}
+
+function fetchGuilds ( client: AkairoClient ): string[] {
+	
+	let guilds: string[] = [];
+
+	if ( client.guilds.cache.size > 0 ) {
+		client.guilds.cache.forEach( async g => {
+			guilds.push(`\n"${g.name}" [${g.id}] by ${g.owner.user.tag} [${g.owner.id}]`)
+		})
+	} else {
+		guilds = ["none cached yet"]
+	}
+
+	return guilds;
 }
