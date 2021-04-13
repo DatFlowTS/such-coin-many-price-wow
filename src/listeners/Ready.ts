@@ -224,14 +224,8 @@ async function listGuilds ( client: AkairoClient ): Promise<Message | void> {
 	}
 	let channel: TextChannel = await client.channels.fetch("831417911968399361", true, true) as TextChannel
 	let msg: Message = await channel.messages.fetch("831418581475655700", true, true);
-	let oldEmbeds = msg.embeds.filter(e => {
-		if (e.description !== embed.description) {
-			return e;
-		} else {
-			return embed;
-		}
-	})
-	if (!oldEmbeds.includes(embed) || msg.embeds.length < 1) {
+	let oldEmbeds = msg.embeds.filter(e => e.description !== embed.description)
+	if (oldEmbeds.length > 0 || msg.embeds.length < 1) {
 		return await msg.edit("", embed);
 	}
 }
