@@ -78,7 +78,7 @@ export default class MessageListener extends Listener {
         })
 
         try {
-            let logChannel: TextChannel = this.client.channels.cache.get('831405229483753474') as TextChannel
+            let logChannel: TextChannel = this.client.channels.cache.get('831406532566319155') as TextChannel
             logChannel.send(embed);
         } catch (err) {
             if (err) return console.log(err.stack)
