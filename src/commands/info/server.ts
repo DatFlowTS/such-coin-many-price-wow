@@ -1,8 +1,7 @@
 import { Command } from 'discord-akairo';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed, TextChannel, Guild } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
-import { TextChannel } from 'discord.js';
 
 interface HumanLevels {
     [key: string]: string;
@@ -44,13 +43,21 @@ export default class ServerInfoCommand extends Command {
             category: 'Info',
             channel: 'guild',
             clientPermissions: ['EMBED_LINKS'],
-            ratelimit: 2
+            ratelimit: 2,
+            args: [
+                {
+                    id: 'guild',
+                    match: 'content',
+                    type: 'guild',
+                    default: (message: Message): Guild => message.guild
+                }
+            ]
         });
     }
 
-    public async exec(message: Message): Promise<Message | Message[]> {
+    public async exec(message: Message, { guild }: { guild: Guild }): Promise<Message | Message[]> {
 
-        let guildDate: moment.Moment = moment(message.guild!.createdAt);
+        let guildDate: moment.Moment = moment(guild!.createdAt);
 		let guildMonth: string = guildDate.format('MMM');
         let guildMonthString: string;
 
@@ -96,43 +103,43 @@ export default class ServerInfoCommand extends Command {
 				break;
         }
 
-        let guildFeatures: string[] = message.guild!.features.map((f, k): string => `• ${GUILD_FEATURES[f]}\n`)
-        let guildBanner: string = message.guild.features.filter((f) => GUILD_FEATURES[f] === 'Banner').length > 0 ? message.guild.bannerURL({ format: 'png', size: 4096 }) : '';
-        let guildSplash: string = message.guild.features.filter((f) => GUILD_FEATURES[f] === 'Splash Invite').length > 0 ? message.guild.splashURL({ format: "png", size: 4096 }) : '';
-        let vanityURL: string = message.guild.features.filter((f) => GUILD_FEATURES[f] === 'Vanity URL').length > 0 ? `https://discord.gg/${message.guild.vanityURLCode}/` : '';
+        let guildFeatures: string[] = guild!.features.map((f, k): string => `• ${GUILD_FEATURES[f]}\n`)
+        let guildBanner: string = guild.features.filter((f) => GUILD_FEATURES[f] === 'Banner').length > 0 ? guild.bannerURL({ format: 'png', size: 4096 }) : '';
+        let guildSplash: string = guild.features.filter((f) => GUILD_FEATURES[f] === 'Splash Invite').length > 0 ? guild.splashURL({ format: "png", size: 4096 }) : '';
+        let vanityURL: string = guild.features.filter((f) => GUILD_FEATURES[f] === 'Vanity URL').length > 0 ? `https://discord.gg/${guild.vanityURLCode}/` : '';
 
         const on: string = '🟢';
         const off: string = '⚪';
         const dnd: string = '🔴';
         const afk: string = '🟡';
 
-        var onMembers: number = message.guild.members.cache.filter((m) => m.user.presence.status === 'online' && !m.user.bot).size;
-        var offMembers: number = message.guild.members.cache.filter((m) => m.user.presence.status === 'offline' && !m.user.bot).size;
-        var dndMembers: number = message.guild.members.cache.filter((m) => m.user.presence.status === 'dnd' && !m.user.bot).size;
-        var afkMembers: number = message.guild.members.cache.filter((m) => m.user.presence.status === 'idle' && !m.user.bot).size;
+        var onMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'online' && !m.user.bot).size;
+        var offMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'offline' && !m.user.bot).size;
+        var dndMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'dnd' && !m.user.bot).size;
+        var afkMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'idle' && !m.user.bot).size;
 
-        let adminRoleString: string = message.guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><:empty:744513757962829845>• <@&${roles.id}>`).join(' ')
-        let adminRoleSize: number = message.guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).size;
+        let adminRoleString: string = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><:empty:744513757962829845>• <@&${roles.id}>`).join(' ')
+        let adminRoleSize: number = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).size;
 
-        const guildOwner = await message.guild!.members.fetch(message.guild!.ownerID);
+        const guildOwner = await guild!.members.fetch(guild!.ownerID);
         const embed = new MessageEmbed()
             .setColor(guildOwner.displayColor)
-            .setAuthor(`${message.guild!.name}`, message.guild!.iconURL({ dynamic: true, format: "png" }))
-            .setDescription(`(ID: ${message.guild!.id}${guildSplash !== '' ? `, [Splash](${guildSplash})` : ''})`)
+            .setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }))
+            .setDescription(`(ID: ${guild!.id}${guildSplash !== '' ? `, [Splash](${guildSplash})` : ''})`)
             .addField(
                 '⇒ Channels',
                 stripIndents`
-                • ${message.guild!.channels.cache.filter((ch): boolean => ch.type === 'text').size} Text (${message.guild!.channels.cache.filter((ch) => (ch as TextChannel).nsfw).size} NSFW)
-                • ${message.guild!.channels.cache.filter((ch): boolean => ch.type === 'voice').size} Voice
-                ${message.guild!.afkChannelID ? `• AFK: <#${message.guild!.afkChannelID}> after ${message.guild!.afkTimeout / 60}min` : `• AFK-Timeout: ${message.guild!.afkTimeout ? `${message.guild!.afkTimeout / 60}min` : ''}`}
-                • Kategorien: ${message.guild!.channels.cache.filter((ch): boolean => ch.type === 'category').size}
+                • ${guild!.channels.cache.filter((ch): boolean => ch.type === 'text').size} Text (${guild!.channels.cache.filter((ch) => (ch as TextChannel).nsfw).size} NSFW)
+                • ${guild!.channels.cache.filter((ch): boolean => ch.type === 'voice').size} Voice
+                ${guild!.afkChannelID ? `• AFK: <#${guild!.afkChannelID}> after ${guild!.afkTimeout / 60}min` : `• AFK-Timeout: ${guild!.afkTimeout ? `${guild!.afkTimeout / 60}min` : ''}`}
+                • Kategorien: ${guild!.channels.cache.filter((ch): boolean => ch.type === 'category').size}
             `, true)
             .addField(
                 '⇒ Mitglieder',
                 stripIndents`
-                • ${message.guild!.members.cache.size} members
-                <:empty:744513757962829845>• ${message.guild!.members.cache.filter((m) => m.user.bot).size} bots
-                <:empty:744513757962829845>• ${message.guild!.members.cache.filter((m) => !m.user.bot).size} menschen
+                • ${guild!.members.cache.size} members
+                <:empty:744513757962829845>• ${guild!.members.cache.filter((m) => m.user.bot).size} bots
+                <:empty:744513757962829845>• ${guild!.members.cache.filter((m) => !m.user.bot).size} menschen
                 • Owner: ${guildOwner}
                 <:empty:744513757962829845>• ID: ${guildOwner.id}
                 <:empty:744513757962829845>• Tag: ${guildOwner.user.tag}
@@ -141,22 +148,22 @@ export default class ServerInfoCommand extends Command {
             .addField(
                 '⇒ Features',
                 stripIndents`
-                ${guildFeatures.length > 0 ? `${message.guild!.features.map((f, k): string => `• ${GUILD_FEATURES[f]}\n`).join(' ')}${message.guild.verified ? `\n• Verified` : ''}` : '• No Features'}
+                ${guildFeatures.length > 0 ? `${guild!.features.map((f, k): string => `• ${GUILD_FEATURES[f]}\n`).join(' ')}${guild.verified ? `\n• Verified` : ''}` : '• No Features'}
             `, true)
             .addField(
                 '⇒ Nitro Boosts',
                 stripIndents`
-                ${message.guild!.premiumSubscriptionCount > 0 ? stripIndents`
-                • Boost tier: ${message.guild!.premiumTier}
-                • Anzahl Boosts: ${message.guild!.premiumSubscriptionCount}
-                ${message.guild!.premiumTier === 1 ? `• Perks:
+                ${guild!.premiumSubscriptionCount > 0 ? stripIndents`
+                • Boost tier: ${guild!.premiumTier}
+                • Anzahl Boosts: ${guild!.premiumSubscriptionCount}
+                ${guild!.premiumTier === 1 ? `• Perks:
                 <:empty:744513757962829845>• 100 Emoji Slots
                 <:empty:744513757962829845>• 128kbps max audio quality
-                <:empty:744513757962829845>• High Quality Streaming` : `${message.guild!.premiumTier === 2 ? `• Perks:
+                <:empty:744513757962829845>• High Quality Streaming` : `${guild!.premiumTier === 2 ? `• Perks:
                 <:empty:744513757962829845>• 150 Emoji Slots
                 <:empty:744513757962829845>• 256kbps max audio quality
                 <:empty:744513757962829845>• 50 MB upload limit
-                <:empty:744513757962829845>• 1080p @ 60fps Streaming` : `${message.guild!.premiumTier === 3 ? `• Perks:
+                <:empty:744513757962829845>• 1080p @ 60fps Streaming` : `${guild!.premiumTier === 3 ? `• Perks:
                 <:empty:744513757962829845>• 250 Emoji Slots
                 <:empty:744513757962829845>• 384kbps max audio quality
                 <:empty:744513757962829845>• 100 MB upload limit
@@ -167,11 +174,11 @@ export default class ServerInfoCommand extends Command {
             .addField(
                 '⇒ Weiteres',
                 stripIndents`
-                • Rollen: ${message.guild!.roles.cache.size}
+                • Rollen: ${guild!.roles.cache.size}
                 <:empty:744513757962829845>• Administratorrollen: ${adminRoleSize > 0 && adminRoleString.length < 768 ? `(${adminRoleSize})${adminRoleString}` : `${adminRoleSize}`}
-                • Region: ${message.guild!.region}
+                • Region: ${guild!.region}
                 • Erstellt: ${guildDate.format(`DD. [${guildMonthString}] YYYY [|] HH:mm:ss`)}
-                • Verifikationsstufe: ${HUMAN_LEVELS[message.guild!.verificationLevel]}
+                • Verifikationsstufe: ${HUMAN_LEVELS[guild!.verificationLevel]}
             `)
 
 
@@ -211,7 +218,7 @@ export default class ServerInfoCommand extends Command {
 
 
         if (guildBanner !== '') embed.setImage(guildBanner);
-        if (vanityURL !== '') embed.setAuthor(`${message.guild!.name}`, message.guild!.iconURL({ dynamic: true, format: "png" }), vanityURL);
+        if (vanityURL !== '') embed.setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }), vanityURL);
 
         return message.util!.send(embed).catch(e => { if (e) return message.util!.send('something went wrong') });
     }
