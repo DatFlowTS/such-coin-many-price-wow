@@ -118,7 +118,7 @@ export default class ServerInfoCommand extends Command {
         var dndMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'dnd' && !m.user.bot).size;
         var afkMembers: number = guild.members.cache.filter((m) => m.user.presence.status === 'idle' && !m.user.bot).size;
 
-        let adminRoleString: string = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><:empty:744513757962829845>• <@&${roles.id}>`).join(' ')
+        let adminRoleString: string = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><:empty:744513757962829845>• ${guild !== message.guild ? `${roles.name}`: `<@&${roles.id}>`}`).join(' ')
         let adminRoleSize: number = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).size;
 
         let guildInvites: Collection<string, Invite> = await guild.fetchInvites();
