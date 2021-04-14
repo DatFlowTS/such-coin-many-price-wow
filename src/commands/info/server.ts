@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel, Guild, Collection, Invite } from 'discord.js';
+import { Message, MessageEmbed, TextChannel, Guild, Collection, Invite, GuildMember } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
 
@@ -123,12 +123,27 @@ export default class ServerInfoCommand extends Command {
 
         let guildInvites: Collection<string, Invite> = await guild.fetchInvites();
         let ownerInvite: Invite = guildInvites.find(inv => inv.inviter.id == guild.owner.id);
-        let invite: string = !vanityURL || vanityURL == "" ? `${!ownerInvite || ownerInvite.url == "" ? guildInvites.first().url : ownerInvite.url}` : vanityURL
+        let adminInvite: Invite;
+        let guildMembers: Collection<string, GuildMember> = guild.members.cache;
+        let inviteMembers: string[] = guildMembers.filter(m => m.permissions.has('ADMINISTRATOR' || 'CREATE_INSTANT_INVITE')).map(m => m.id)
+
+        for (let id in inviteMembers) {
+            var url: string = '';
+            var inv: Invite = guildInvites.find(inv => inv.inviter.id == id);
+            url = !inv || inv == undefined ? '' : inv.url;
+            if (url !== '') {
+                adminInvite = inv
+                break;
+            }
+            adminInvite = null;
+        }
+
+        let invite: string = !vanityURL || vanityURL == "" ? `${!ownerInvite || ownerInvite.url == '' ? `${adminInvite != null ? adminInvite : ''}` : ownerInvite.url}` : vanityURL
 
         const guildOwner = await guild!.members.fetch(guild!.ownerID);
         const embed = new MessageEmbed()
             .setColor(guildOwner.displayColor)
-            .setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }), invite)
+            .setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }))
             .setDescription(`(ID: ${guild!.id}${guildSplash !== '' ? `, [Splash](${guildSplash})` : ''})`)
             .addField(
                 '⇒ Channels',
@@ -220,6 +235,7 @@ export default class ServerInfoCommand extends Command {
         embed.setFooter(`Meitglieder nach Status: ${onMembers > 0 ? `${on} ${onMembers} ✧ ` : ''}${afkMembers > 0 ? `${afk} ${afkMembers} ✧ ` : ''}${dndMembers > 0 ? `${dnd} ${dndMembers} ✧ ` : ''}${offMembers > 0 ? `${off} ${offMembers} ✧ ` : ''}${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`)
 
         if (guildBanner !== '') embed.setImage(guildBanner);
+        if (invite !== '') embed.setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }), invite)
 
         return message.util!.send(embed).catch(e => { if (e) return message.util!.send('something went wrong') });
     }
