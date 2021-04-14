@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo';
-import { Message, MessageEmbed, TextChannel, Guild } from 'discord.js';
+import { Message, MessageEmbed, TextChannel, Guild, Collection, Invite } from 'discord.js';
 import { stripIndents } from 'common-tags';
 import moment from 'moment';
 
@@ -121,10 +121,14 @@ export default class ServerInfoCommand extends Command {
         let adminRoleString: string = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).sort((r1, r2) => r2.comparePositionTo(r1)).map((roles): string => `\n<:empty:744513757962829845><:empty:744513757962829845>• <@&${roles.id}>`).join(' ')
         let adminRoleSize: number = guild.roles.cache.filter((r) => r.permissions.has('ADMINISTRATOR')).size;
 
+        let guildInvites: Collection<string, Invite> = await guild.fetchInvites();
+        let ownerInvite: Invite = guildInvites.find(inv => inv.inviter.id == guild.owner.id);
+        let invite: string = !vanityURL || vanityURL == "" ? `${!ownerInvite || ownerInvite.url == "" ? guildInvites.first().url : ownerInvite.url}` : vanityURL
+
         const guildOwner = await guild!.members.fetch(guild!.ownerID);
         const embed = new MessageEmbed()
             .setColor(guildOwner.displayColor)
-            .setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }))
+            .setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }), invite)
             .setDescription(`(ID: ${guild!.id}${guildSplash !== '' ? `, [Splash](${guildSplash})` : ''})`)
             .addField(
                 '⇒ Channels',
@@ -215,10 +219,7 @@ export default class ServerInfoCommand extends Command {
 
         embed.setFooter(`Meitglieder nach Status: ${onMembers > 0 ? `${on} ${onMembers} ✧ ` : ''}${afkMembers > 0 ? `${afk} ${afkMembers} ✧ ` : ''}${dndMembers > 0 ? `${dnd} ${dndMembers} ✧ ` : ''}${offMembers > 0 ? `${off} ${offMembers} ✧ ` : ''}${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`)
 
-
-
         if (guildBanner !== '') embed.setImage(guildBanner);
-        if (vanityURL !== '') embed.setAuthor(`${guild!.name}`, guild!.iconURL({ dynamic: true, format: "png" }), vanityURL);
 
         return message.util!.send(embed).catch(e => { if (e) return message.util!.send('something went wrong') });
     }
