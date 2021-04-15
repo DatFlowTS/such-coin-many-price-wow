@@ -1,6 +1,6 @@
 import { stripIndents } from 'common-tags';
 import { AkairoClient, Listener } from 'discord-akairo';
-import { MessageEmbed, TextChannel, Message } from 'discord.js';
+import { MessageEmbed, TextChannel, Message, Presence } from 'discord.js';
 import moment from 'moment';
 import botConfig from '../config/botConfig';
 import fs from 'fs';
@@ -20,13 +20,9 @@ export default class ReadyListener extends Listener {
 	public async exec(): Promise<void> {
         const client = this.client;
 
-		var helpPresence: boolean = true;
+        defaultPresence(client);
 
-        helpPresence = defaultPresence(client, helpPresence);
-
-        setInterval(async _ => {
-			helpPresence = await checkForRecordTimestamp(client, helpPresence)
-		}, 4567);
+        setInterval(checkForRecordTimestamp, 4567);
 
         setInterval(recordingReminder, 600000, client);
         setInterval(listGuilds, 56789, client)
@@ -55,7 +51,7 @@ export default class ReadyListener extends Listener {
     }
 }
 
-async function checkForRecordTimestamp (client: AkairoClient, helpPresence: boolean): Promise <boolean> {
+async function checkForRecordTimestamp (client: AkairoClient): Promise <Presence | void> {
     let checkString = fs.readFileSync(`${path}goTimestamp.json`, { encoding: 'utf-8' });
 
     let checkArr = checkString.split(",");
@@ -66,30 +62,23 @@ async function checkForRecordTimestamp (client: AkairoClient, helpPresence: bool
     if (timestamp == 0) {
         // do simply nothing
         if (client.user.presence.status !== 'online') {
-			return defaultPresence(client, helpPresence);
+			return await defaultPresence(client);
 		}
-        return true;
+		return;
     } else {
         let now: number = Date.now();
 
         var passedTime: number = now - timestamp;
 
-        recordingPresence(client, passedTime);
-		return true
+        return recordingPresence(client, passedTime);
     }
 }
 
-function defaultPresence (client: AkairoClient, helpPresence: boolean): boolean {
+async function defaultPresence (client: AkairoClient): Promise<Presence> {
 	let strings: string[] = [`Radio Rexford [${botConfig.botDefaultPrefix}help]`, "visit Radio-Rexford.com"];
-	var str: string;
-
-	if (helpPresence) {
-		str = strings[0];
-	} else {
-		str = strings[1];
-	}
-
-	client.user.setPresence({
+	var str: string = strings[Math.floor(Math.random() * strings.length) - 1]
+	
+	return await client.user.setPresence({
         activity: {
             type: 'LISTENING',
             name: str
@@ -97,11 +86,6 @@ function defaultPresence (client: AkairoClient, helpPresence: boolean): boolean 
         status: 'online',
         afk: false
     })
-
-	while (helpPresence) {
-		return false
-	}
-	return true
 }
 
 function recordingPresence (client: AkairoClient, passedTime: number) {
