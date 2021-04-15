@@ -8,8 +8,6 @@ import 'moment-duration-format';
 
 const path: string = "/home/datflow/RadioRexfordBot/";
 
-var helpPresence: boolean = true;
-
 export default class ReadyListener extends Listener {
 	public constructor() {
 		super('ready', {
@@ -19,10 +17,17 @@ export default class ReadyListener extends Listener {
 		});
 	}
 
-	public exec(): void {
+	public async exec(): Promise<void> {
         const client = this.client;
-        defaultPresence(client);
-        setInterval(checkForRecordTimestamp, 4567, client);
+
+		var helpPresence: boolean = true;
+
+        helpPresence = defaultPresence(client, helpPresence);
+
+        setInterval(async _ => {
+			helpPresence = await checkForRecordTimestamp(client, helpPresence)
+		}, 4567);
+
         setInterval(recordingReminder, 600000, client);
         setInterval(listGuilds, 56789, client)
 
@@ -50,7 +55,7 @@ export default class ReadyListener extends Listener {
     }
 }
 
-async function checkForRecordTimestamp (client: AkairoClient) {
+async function checkForRecordTimestamp (client: AkairoClient, helpPresence: boolean): Promise <boolean> {
     let checkString = fs.readFileSync(`${path}goTimestamp.json`, { encoding: 'utf-8' });
 
     let checkArr = checkString.split(",");
@@ -60,39 +65,43 @@ async function checkForRecordTimestamp (client: AkairoClient) {
 
     if (timestamp == 0) {
         // do simply nothing
-        if (client.user.presence.status !== 'online') return defaultPresence(client);
-        return;
+        if (client.user.presence.status !== 'online') {
+			return defaultPresence(client, helpPresence);
+		}
+        return true;
     } else {
-        let channel: TextChannel = client.channels.cache.get(channelID) as TextChannel;
         let now: number = Date.now();
 
         var passedTime: number = now - timestamp;
 
-        return recordingPresence(client, passedTime);
+        recordingPresence(client, passedTime);
+		return true
     }
 }
 
-function defaultPresence (client: AkairoClient) {
+function defaultPresence (client: AkairoClient, helpPresence: boolean): boolean {
 	let strings: string[] = [`Radio Rexford [${botConfig.botDefaultPrefix}help]`, "visit Radio-Rexford.com"];
 	var str: string;
 
-	while (!helpPresence) {
-		str = strings[1];
-		helpPresence = true;
-	}
-	while (helpPresence) {
+	if (helpPresence) {
 		str = strings[0];
-		helpPresence = false;
+	} else {
+		str = strings[1];
 	}
 
-    return client.user.setPresence({
+	client.user.setPresence({
         activity: {
             type: 'LISTENING',
-            name: `Radio Rexford [${botConfig.botDefaultPrefix}help]`
+            name: str
         },
         status: 'online',
         afk: false
     })
+
+	while (helpPresence) {
+		return false
+	}
+	return true
 }
 
 function recordingPresence (client: AkairoClient, passedTime: number) {
