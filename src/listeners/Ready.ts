@@ -75,13 +75,10 @@ async function checkForRecordTimestamp (client: AkairoClient): Promise <Presence
 }
 
 async function defaultPresence (client: AkairoClient): Promise<Presence> {
-	let strings: string[] = [`Radio Rexford [${botConfig.botDefaultPrefix}help]`, "visit Radio-Rexford.com"];
-	var str: string = strings[Math.floor(Math.random() * strings.length) - 1]
-	
 	return await client.user.setPresence({
         activity: {
             type: 'LISTENING',
-            name: str
+            name: `Radio-Rexford.com [${botConfig.botDefaultPrefix}help]`
         },
         status: 'online',
         afk: false
