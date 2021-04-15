@@ -8,6 +8,8 @@ import 'moment-duration-format';
 
 const path: string = "/home/datflow/RadioRexfordBot/";
 
+var helpPresence: boolean = true;
+
 export default class ReadyListener extends Listener {
 	public constructor() {
 		super('ready', {
@@ -71,6 +73,18 @@ async function checkForRecordTimestamp (client: AkairoClient) {
 }
 
 function defaultPresence (client: AkairoClient) {
+	let strings: string[] = [`Radio Rexford [${botConfig.botDefaultPrefix}help]`, "visit Radio-Rexford.com"];
+	var str: string;
+
+	while (!helpPresence) {
+		str = strings[1];
+		helpPresence = true;
+	}
+	while (helpPresence) {
+		str = strings[0];
+		helpPresence = false;
+	}
+
     return client.user.setPresence({
         activity: {
             type: 'LISTENING',
