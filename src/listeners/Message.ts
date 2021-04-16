@@ -64,16 +64,17 @@ export default class MessageListener extends Listener {
 
         let embed: MessageEmbed = new MessageEmbed({
             author: { 
-                name: msg.author.tag, 
+                name: msg.author.tag + " [" + msg.author.id + "]", 
                 iconURL: msg.author.avatarURL({ 
                     dynamic: true 
                 })
             },
+            title: "Message: " + msg.id,
             color: msg.member.displayHexColor,
             description: msg.content,
             footer: {
                 iconURL: msg.guild.iconURL({ dynamic:true }),
-                text: `${(msg.channel as TextChannel).name} @ ${msg.guild.name} [${msg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
+                text: `${(msg.channel as TextChannel).name} [${msg.channel.id}] @ ${msg.guild.name} [${msg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
             }
         })
 

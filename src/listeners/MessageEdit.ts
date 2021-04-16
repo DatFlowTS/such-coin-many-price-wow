@@ -66,11 +66,12 @@ export default class MessageUpdateListener extends Listener {
 
         let embed: MessageEmbed = new MessageEmbed({
             author: { 
-                name: nMsg.author.tag, 
+                name: nMsg.author.tag + " [" + nMsg.author.id + "]",
                 iconURL: nMsg.author.avatarURL({ 
                     dynamic: true 
                 })
             },
+            title: "Message: " + nMsg.id,
             color: nMsg.member.displayHexColor,
             fields: [
                 {
@@ -84,7 +85,7 @@ export default class MessageUpdateListener extends Listener {
             ],
             footer: {
                 iconURL: nMsg.guild.iconURL({ dynamic:true }),
-                text: `${(nMsg.channel as TextChannel).name} @ ${nMsg.guild.name} [${nMsg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
+                text: `${(nMsg.channel as TextChannel).name} [${nMsg.channel.id}] @ ${nMsg.guild.name} [${nMsg.guild.id}] ✧✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`
             }
         })
         if (nMsg.attachments.size > 0) {
