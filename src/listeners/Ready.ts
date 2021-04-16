@@ -238,7 +238,7 @@ function fetchGuilds ( client: AkairoClient ): string[] {
 	
 	let guilds: string[] = [];
 
-	if ( client.guilds.cache.size > 0 ) {
+	if ( client.guilds.cache.size > 1 ) {
 		let index: number = 0;
 		client.guilds.cache.forEach( async (g) => {
 			index++;
