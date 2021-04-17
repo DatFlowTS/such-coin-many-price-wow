@@ -22,7 +22,7 @@ export default class ReadyListener extends Listener {
 
         defaultPresence(client);
 
-        setInterval(checkForRecordTimestamp, 4567);
+        setInterval(checkForRecordTimestamp, 4567, client);
 
         setInterval(recordingReminder, 600000, client);
         setInterval(listGuilds, 56789, client)
@@ -57,7 +57,6 @@ async function checkForRecordTimestamp (client: AkairoClient): Promise <Presence
     let checkArr = checkString.split(",");
 
     var timestamp: number = parseInt(checkArr[0].replace(new RegExp('{"timestamp":'), ''));
-    var channelID: string = checkArr[1].replace(new RegExp('"channelID":"'), '').replace(new RegExp('"}'), '');
 
     if (timestamp == 0) {
         // do simply nothing
