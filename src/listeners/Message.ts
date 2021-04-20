@@ -16,7 +16,7 @@ export default class MessageListener extends Listener {
         if (!msg.guild) return;
         if (msg.author.bot) return;
 
-        const list: string[] = ["hodl", "h0dl", "ho"];
+        const list: string[] = ["hodl", "h0dl", "hodl!", "h0dl!", "hold", "hold!"];
 
         hodlTrigger.check(this.client, msg, list);
 	}
