@@ -4,7 +4,6 @@ import * as util from 'util';
 import { stripIndents } from 'common-tags';
 import { Message } from 'discord.js';
 
-
 const NL = '!!NL!!';
 const NL_PATTERN = new RegExp(NL, 'g');
 

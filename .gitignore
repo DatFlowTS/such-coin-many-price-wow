@@ -6,6 +6,6 @@ node_modules/
 .eslintcache
 dist
 package-lock.json
-goTimestamp.json
+last*.json
 .env
-moment.js
+dBot-*

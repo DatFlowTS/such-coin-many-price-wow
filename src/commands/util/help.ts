@@ -8,7 +8,7 @@ export default class HelpCommand extends Command {
         super('help', {
             aliases: ['help', 'commands', 'cmdlist'],
             description: {
-                content: 'Zeigt eine liste verfügbarer Befehle.',
+                content: 'A list of available commands.',
                 usage: '[command]'
             },
             category: 'Util',
@@ -48,9 +48,9 @@ export default class HelpCommand extends Command {
             const embed = new MessageEmbed()
                 //@ts-ignore
                 .setColor(message.member.displayColor)
-                .setTitle('Befehlübersicht')
-                .setDescription(stripIndents`Eine Liste verfügbarer Befehle.
-                Für zusätzliche Infos, schreibe \`${prefix[rnd]}help <befehl>\`
+                .setTitle('Command overview')
+                .setDescription(stripIndents`A list of available commands.
+                For mor information, type \`${prefix[rnd]}help <command>\`
             `);
 
             var cmdSize: number = 0;
@@ -88,53 +88,9 @@ export default class HelpCommand extends Command {
             }
 
             let now: moment.Moment = moment(Date.now());
-            let nowMonth: string = now.format('MMM');
-            let nowMonthString: string;
-    
-            switch (nowMonth) {
-                case 'Jan':
-                    nowMonthString = 'Januar'
-                    break;
-                case 'Feb':
-                    nowMonthString = 'Februar'
-                    break;
-                case 'Mar':
-                    nowMonthString = 'März'
-                    break;
-                case 'Apr':
-                    nowMonthString = 'April'
-                    break;
-                case 'May':
-                    nowMonthString = 'Mai'
-                    break;
-                case 'Jun':
-                    nowMonthString = 'Juni'
-                    break;
-                case 'Jul':
-                    nowMonthString = 'Juli'
-                    break;
-                case 'Aug':
-                    nowMonthString = 'August'
-                    break;
-                case 'Sep':
-                    nowMonthString = 'September'
-                    break;
-                case 'Oct':
-                    nowMonthString = 'Oktober'
-                    break;
-                case 'Nov':
-                    nowMonthString = 'November'
-                    break;
-                case 'Dec':
-                    nowMonthString = 'Dezember'
-                    break;
-                default:
-                    nowMonthString = nowMonth;
-                    break;
-            }
 
             embed.setFooter(
-                `${cmdSize} befehle insgesamt ✧ angefragt von ${message.author.tag} ✧ ${now.format(`DD. [${nowMonthString}] YYYY [|] HH:mm:ss`)}`,
+                `${cmdSize} total commands ✧ requested by ${message.author.tag} ✧ ${now.format(`MM/DD/YYYY [|] HH:mm:ss`)}`,
                 `${message.author.displayAvatarURL({ format: 'png', dynamic: true })}`
             )
 
@@ -144,10 +100,10 @@ export default class HelpCommand extends Command {
         const embed = new MessageEmbed()
             .setColor([155, 200, 200])
             .setTitle(`\`${command.aliases[0]} ${command.description.usage ? command.description.usage : ''}\``)
-            .addField('⇒ Beschreibung', `${command.description.content ? command.description.content : ''} ${command.description.ownerOnly ? '\n**[Nur Entwickler]**' : ''}`);
+            .addField('⇒ Description', `${command.description.content ? command.description.content : ''} ${command.description.ownerOnly ? '\n**[DEVS ONLY]**' : ''}`);
 
-        if (command.aliases.length > 1) embed.addField('⇒ Aliasse', `\`${command.aliases.join('` `')}\``, true);
-        if (command.description.examples && command.description.examples.length) embed.addField('⇒ Beispiele', `\`${command.aliases[0]} ${command.description.examples.join(`\`\n\`${command.aliases[0]} `)}\``, true);
+        if (command.aliases.length > 1) embed.addField('⇒ Aliases', `\`${command.aliases.join('` `')}\``, true);
+        if (command.description.examples && command.description.examples.length) embed.addField('⇒ Examples', `\`${command.aliases[0]} ${command.description.examples.join(`\`\n\`${command.aliases[0]} `)}\``, true);
 
         return message.util!.send(embed);
     }

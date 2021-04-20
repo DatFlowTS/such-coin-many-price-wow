@@ -4,13 +4,19 @@ import {
 	AkairoClient,
 } from 'discord-akairo';
 import { join } from 'path';
+import { Connection } from 'typeorm';
+import Database from '../structures/Database';
 import botConfig from '../config/botConfig';
+import dbConfig from '../config/dbConfig';
+import SettingsProvider from '../structures/SettingsProvider'
+import { Settings } from '../models/Settings'
 
 declare module 'discord-akairo' {
 	interface AkairoCLient {
 		commandHandler: CommandHandler;
 		listenerHandler: ListenerHandler;
 		config: BotOptions;
+		settings: SettingsProvider;
 		ownerID: string[];
 	}
 }
@@ -22,6 +28,10 @@ interface BotOptions {
 }
 
 export default class BotClient extends AkairoClient {
+	public db!: Connection;
+
+	public settings: SettingsProvider;
+
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: join(__dirname, '..', 'commands'),
 		prefix: botConfig.botDefaultPrefix,
@@ -33,12 +43,12 @@ export default class BotClient extends AkairoClient {
 		argumentDefaults: {
 			prompt: {
 				modifyStart: (_, str): string =>
-					`${str}\n\n*Schreibe \`stop\` um abzubrechen...*`,
+					`${str}\n\n*type \`cancel\` to cancel the command...*`,
 				modifyRetry: (_, str): string =>
-					`${str}\n\n*Schreibe \`stop\` um abzubrechen...*`,
-				timeout: 'Timeout. Hast dir zu viel Zeit gelassen...',
+					`${str}\n\n*type \`cancel\` to cancel the command...*`,
+				timeout: 'Timeout. You took too long...',
 				ended:
-					'Digger, wie oft noch?! Maximale Anzahl Versuche erreicht!',
+					'Calm down! You reached the maximum amount of tries!',
 				retries: 3,
 				time: 3e4,
 			},
@@ -71,6 +81,13 @@ export default class BotClient extends AkairoClient {
 
 		this.commandHandler.loadAll();
 		this.listenerHandler.loadAll();
+
+		this.db = Database.get(dbConfig.databaseName);
+		await this.db.connect();
+		await this.db.synchronize();
+
+		this.settings = new SettingsProvider(this.db.getRepository(Settings));
+		await this.settings.init();
 	}
 
 	public async start(): Promise<string> {

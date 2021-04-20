@@ -1,17 +1,18 @@
 {
-  "name": "radiorexfordbot",
+  "name": "such-coin-many-price-wow",
   "version": "0.0.1",
-  "description": "An exclusive simple bot, related to the Radio Rexford Podcast.",
+  "description": "A Discord Bot displaying DOGE Value in € and $ (switching every 10s) in status and also via command. Does have other features, too. Maybe.",
   "main": "dist/src/bot.js",
   "dependencies": {
     "common-tags": "*",
     "discord-akairo": "*",
     "discord.js": "*",
     "moment": "*",
-    "moment-duration-format": "^2.3.2",
+    "moment-duration-format": "*",
     "ms": "*",
     "node-emoji": "*",
     "punycode.js": "*",
+    "request": "*",
     "rss-parser": "*",
     "validator": "*"
   },
@@ -20,15 +21,21 @@
     "@types/common-tags": "*",
     "@types/dotenv": "*",
     "@types/moment": "*",
-    "@types/moment-duration-format": "^2.2.2",
+    "@types/moment-duration-format": "*",
     "@types/ms": "*",
     "@types/node": "*",
+    "@types/request": "*",
     "@types/validator": "*",
+    "dot-prop": "^6.0.1",
     "dotenv": "*",
     "eslint": "*",
+    "mariadb": "*",
+    "mysql": "*",
+    "mysql2": "*",
     "prettier": "*",
     "reflect-metadata": "*",
     "ts-node": "*",
+    "typeorm": "*",
     "typescript": "*"
   },
   "scripts": {
@@ -36,7 +43,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/datflowts/RadioRexfordBot"
+    "url": "https://github.com/datflowts/such-coin-many-price-wow"
   },
   "author": "DatFlow#0001",
   "license": "AGPL-3.0-or-later"

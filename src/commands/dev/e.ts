@@ -2,6 +2,9 @@ import { Command } from 'discord-akairo';
 import { Message, Util, TextChannel, NewsChannel } from 'discord.js';
 import { exec, ChildProcess } from 'child_process';
 
+const NL = '!!NL!!';
+const NL_PATTERN = new RegExp(NL, 'g');
+
 export default class ECommand extends Command {
     public constructor() {
         super('e', {

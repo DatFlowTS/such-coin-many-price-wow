@@ -1,4 +1,5 @@
-//    RadioRexfordBot - An exclusive simple bot, related to the Radio Rexford Podcast.
+//    such-coin-many-price-wow
+//    A Discord Bot displaying DOGE Value in € and $ (switching every 10s) in status and also via command. Does have other features, too. Maybe.
 //    Copyright (C) 2021 DatFlow#0001
 //
 //    Contact:
