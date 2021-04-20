@@ -40,6 +40,6 @@ export default {
 				.split(' ')
 				.some((word) => list.includes(word.toLowerCase()))
 		)
-			message.reply(`${replies[rnd]}`);
+			message.channel.send(replies[rnd]);
 	},
 };
