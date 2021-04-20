@@ -14,7 +14,6 @@ export default {
 			"https://tenor.com/view/hodl-braveheart-gif-10465865",
 			"https://tenor.com/view/cat-gato-dogecoin-doge-hodl-gif-20856412",
 			"https://tenor.com/view/dogecoin-doge-wallstreetbets-stonks-stocks-gif-20855962",
-			"https://tenor.com/view/braveheart-hold-shouts-gif-13268605",
 			"https://tenor.com/view/hodl-btc-bitcoin-crypto-gif-10571522",
 			"https://tenor.com/view/hodl-hold-dfv-wsb-gif-20662588",
 			"https://tenor.com/view/xdn-hodl-dgb-divi-gif-18010239",
