@@ -19,7 +19,8 @@ export default class ReadyListener extends Listener {
 	public async exec(): Promise<void> {
 		const client = this.client;
 
-		setInterval(switchPresence, 10000, client)
+		setInterval(refreshOtherRates, 4567, client);
+		setInterval(switchPresence, 10000, client);
 
 		console.log(stripIndents`
 		${this.client.user.tag}
@@ -104,48 +105,100 @@ async function dollarPresence(client: AkairoClient): Promise<string> {
 	return "$";
 }
 
-async function listGuilds(client: AkairoClient): Promise<Message | void> {
-	let now: moment.Moment = moment(Date.now());
+async function refreshOtherRates(client: AkairoClient): Promise<void> {
 
-	let guilds: string = stripIndents`
-		\`\`\`HTML
-		${fetchGuilds(client).toString()}
-		\`\`\``
-
-	let embed: MessageEmbed = new MessageEmbed({
-		title: "✧ GUILDS LIST ✧",
-		description: guilds,
-		footer: {
-			iconURL: client.user.avatarURL({ dynamic: true }),
-			text: now.format(`MM/DD/YYYY [|] HH:mm:ss`)
-		}
+	// BAT
+	request('https://api.binance.com/api/v3/ticker/price?symbol=BATUSDT', (err, res) => {
+		if (err) return console.log(err.stack)
+		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.basicattentiontoken.dollar', usd);
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.basicattentiontoken.euro', 0);
 	})
-	try {
 
-	} catch (err) {
-		if (err) return console.log(err)
-	}
-	let channel: TextChannel = await client.channels.fetch("831417911968399361", true, true) as TextChannel
-	let msg: Message = await channel.messages.fetch("831418581475655700", true, true);
-	let oldEmbeds = msg.embeds.filter(e => e.description !== embed.description)
-	if (oldEmbeds.length > 0 || msg.embeds.length < 1) {
-		return await msg.edit("", embed);
-	}
-}
+	// BTC
+	request('https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR', (err1, res1) => {
+		if (err1) return console.log(err1.stack);
+		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.bitcoin.euro', eur);
 
-function fetchGuilds(client: AkairoClient): string[] {
-
-	let guilds: string[] = [];
-
-	if (client.guilds.cache.size > 1) {
-		let index: number = 0;
-		client.guilds.cache.forEach(async (g) => {
-			index++;
-			guilds.push(`\n\n${index}. "${g.name}" [${g.id}] by ${g.owner.user.tag} [${g.owner.id}]`)
+		request('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT', (err2, res2) => {
+			if (err2) return console.log('```js\n' + err2.stack + '\n```')
+			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
+			//@ts-ignore
+			this.client.settings.set('global', 'lastrate.bitcoin.dollar', usd);
 		})
-	} else {
-		guilds = ["none cached yet"]
-	}
+	})
 
-	return guilds;
+	// ADA
+	request('https://api.binance.com/api/v3/ticker/price?symbol=ADAEUR', (err1, res1) => {
+		if (err1) return console.log(err1.stack);
+		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.cardano.euro', eur);
+
+		request('https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT', (err2, res2) => {
+			if (err2) return console.log('```js\n' + err2.stack + '\n```')
+			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
+			//@ts-ignore
+			this.client.settings.set('global', 'lastrate.cardano.dollar', usd);
+		})
+	})
+
+	// DASH
+	request('https://api.binance.com/api/v3/ticker/price?symbol=DASHUSDT', (err, res) => {
+		if (err) return console.log(err.stack)
+		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.dash.dollar', usd);
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.dash.euro', 0);
+	})
+
+	// DGB
+	request('https://api.binance.com/api/v3/ticker/price?symbol=DGBUSDT', (err, res) => {
+		if (err) return console.log(err.stack)
+		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.digibyte.dollar', usd);
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.digibyte.euro', 0);
+	})
+
+	// ETH
+	request('https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR', (err1, res1) => {
+		if (err1) return console.log(err1.stack);
+		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.ethereum.euro', eur);
+
+		request('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT', (err2, res2) => {
+			if (err2) return console.log('```js\n' + err2.stack + '\n```')
+			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
+			//@ts-ignore
+			this.client.settings.set('global', 'lastrate.ethereum.dollar', usd);
+		})
+	})
+
+	// TRX
+	request('https://api.binance.com/api/v3/ticker/price?symbol=TRXUSDT', (err, res) => {
+		if (err) return console.log(err.stack)
+		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.tron.dollar', usd);
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.tron.euro', 0);
+	})
+
+	// ZIL
+	request('https://api.binance.com/api/v3/ticker/price?symbol=ZILUSDT', (err, res) => {
+		if (err) return console.log(err.stack)
+		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.zilliqa.dollar', usd);
+		//@ts-ignore
+		this.client.settings.set('global', 'lastrate.zilliqa.euro', 0);
+	})
 }
