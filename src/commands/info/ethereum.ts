@@ -35,7 +35,7 @@ export default class EthereumInfoCommand extends Command {
 
         let embedColor: number;
 
-        request('https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR', (err1, res1) => {
+        request('https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR', (err1, res1) => {
             if (err1) return message.reply('```js\n' + err1.stack + '\n```');
             var eur: string = res1.body.split('price":"')[1].replace('"}', "");
             rates += "€ " + eur;
@@ -43,7 +43,7 @@ export default class EthereumInfoCommand extends Command {
             //@ts-ignore
             this.client.settings.set('global', 'lastrate.ethereum.euro', euroRate);
 
-            request('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT', (err2, res2) => {
+            request('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT', (err2, res2) => {
                 if (err2) return message.reply('```js\n' + err2.stack + '\n```')
                 var usd: string = res2.body.split('price":"')[1].replace('"}', "")
                 dollarRate = parseFloat(usd); 
