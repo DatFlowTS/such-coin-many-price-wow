@@ -112,9 +112,9 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err) return console.log(err.stack)
 		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.basicattentiontoken.dollar', usd);
+		client.settings.set('global', 'lastrate.basicattentiontoken.dollar', usd);
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.basicattentiontoken.euro', 0);
+		client.settings.set('global', 'lastrate.basicattentiontoken.euro', 0);
 	})
 
 	// BTC
@@ -122,13 +122,13 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err1) return console.log(err1.stack);
 		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.bitcoin.euro', eur);
+		client.settings.set('global', 'lastrate.bitcoin.euro', eur);
 
 		request('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT', (err2, res2) => {
 			if (err2) return console.log('```js\n' + err2.stack + '\n```')
 			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
 			//@ts-ignore
-			this.client.settings.set('global', 'lastrate.bitcoin.dollar', usd);
+			client.settings.set('global', 'lastrate.bitcoin.dollar', usd);
 		})
 	})
 
@@ -137,13 +137,13 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err1) return console.log(err1.stack);
 		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.cardano.euro', eur);
+		client.settings.set('global', 'lastrate.cardano.euro', eur);
 
 		request('https://api.binance.com/api/v3/ticker/price?symbol=ADAUSDT', (err2, res2) => {
 			if (err2) return console.log('```js\n' + err2.stack + '\n```')
 			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
 			//@ts-ignore
-			this.client.settings.set('global', 'lastrate.cardano.dollar', usd);
+			client.settings.set('global', 'lastrate.cardano.dollar', usd);
 		})
 	})
 
@@ -152,9 +152,9 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err) return console.log(err.stack)
 		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.dash.dollar', usd);
+		client.settings.set('global', 'lastrate.dash.dollar', usd);
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.dash.euro', 0);
+		client.settings.set('global', 'lastrate.dash.euro', 0);
 	})
 
 	// DGB
@@ -162,9 +162,9 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err) return console.log(err.stack)
 		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.digibyte.dollar', usd);
+		client.settings.set('global', 'lastrate.digibyte.dollar', usd);
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.digibyte.euro', 0);
+		client.settings.set('global', 'lastrate.digibyte.euro', 0);
 	})
 
 	// ETH
@@ -172,13 +172,13 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err1) return console.log(err1.stack);
 		var eur: number = parseFloat(res1.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.ethereum.euro', eur);
+		client.settings.set('global', 'lastrate.ethereum.euro', eur);
 
 		request('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT', (err2, res2) => {
 			if (err2) return console.log('```js\n' + err2.stack + '\n```')
 			var usd: number = parseFloat(res2.body.split('price":"')[1].replace('"}', ""));
 			//@ts-ignore
-			this.client.settings.set('global', 'lastrate.ethereum.dollar', usd);
+			client.settings.set('global', 'lastrate.ethereum.dollar', usd);
 		})
 	})
 
@@ -187,9 +187,9 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err) return console.log(err.stack)
 		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.tron.dollar', usd);
+		client.settings.set('global', 'lastrate.tron.dollar', usd);
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.tron.euro', 0);
+		client.settings.set('global', 'lastrate.tron.euro', 0);
 	})
 
 	// ZIL
@@ -197,8 +197,8 @@ async function refreshOtherRates(client: AkairoClient): Promise<void> {
 		if (err) return console.log(err.stack)
 		var usd: number = parseFloat(res.body.split('price":"')[1].replace('"}', ""));
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.zilliqa.dollar', usd);
+		client.settings.set('global', 'lastrate.zilliqa.dollar', usd);
 		//@ts-ignore
-		this.client.settings.set('global', 'lastrate.zilliqa.euro', 0);
+		client.settings.set('global', 'lastrate.zilliqa.euro', 0);
 	})
 }
